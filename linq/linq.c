@@ -191,7 +191,7 @@ void manageNetwork()
        gNames[2],
        gNames[3],
        gNames[4]);
-      if (strcmp(gNames[4],"-")==0)
+      if (strcmp(gNames[4],"-")==1)
        screenNumber=2;
       break;
     }

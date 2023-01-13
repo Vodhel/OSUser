@@ -50,7 +50,7 @@ void melangerDeck()
 
 void printDeck()
 {
-        int i,j;
+        int i,j; // j ?
 
         for (i=0;i<5;i++)
                 printf("%d:%d\n",i,deck[i]);
