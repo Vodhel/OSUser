@@ -247,17 +247,27 @@ void manageRedraw()
    break;
   case 1:
    {
-    SDL_SetRenderDrawColor(renderer, 255, 230, 230, 230);
-    SDL_Rect rect = {0, 0, 1024, 768};
-    SDL_RenderFillRect(renderer, &rect);
+        SDL_SetRenderDrawColor(renderer, 255, 230, 230, 230);
+        SDL_Rect rect = {0, 0, 1024, 768};
+        SDL_RenderFillRect(renderer, &rect);
 
-    myRenderText(gNames[0],105,50);
-    myRenderText(gNames[1],105,110);
-    myRenderText(gNames[2],105,170);
-    myRenderText(gNames[3],105,230);
-    myRenderText(gNames[4],105,300);
+        myRenderText(gNames[0],105,50);
+        myRenderText(gNames[1],105,110);
+        myRenderText(gNames[2],105,170);
+        myRenderText(gNames[3],105,230);
+        myRenderText(gNames[4],105,300);
    }
    break;
+  case 2:
+  {
+        SDL_SetRenderDrawColor(renderer, 255, 230, 230, 230);
+
+        myRenderText(gNames[0],450,300);
+        myRenderText(gNames[1],250,150);
+        myRenderText(gNames[2],500,50);
+        myRenderText(gNames[3],750,150);
+        myRenderText(gNames[4],650,300);
+  }
   default:
    break;
  }

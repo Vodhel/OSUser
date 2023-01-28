@@ -246,7 +246,7 @@ int main(int argc, char *argv[])
 					
 					melangerDeck();
 					affecterRoles();
-					//razJoueurs(); C'est quoi razJoueurs wsh ?
+					//razJoueurs(); C'est quoi razJoueurs wsh ? 
 					broadcastRoles();  //j'étais pas sur de ce qu'il fallait faire ici dcp j'ai fait comme le nom de la fonc l'indique et j'ai envoyé les roles de tlm à tlm
 					char *word = mpts[rand()%10]; //tirer un mot au hasard, penser à changer me 10 si on ajoute/enlève des mots
 					//pour les espions
