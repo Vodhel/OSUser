@@ -191,8 +191,8 @@ void manageNetwork()
        gNames[2],
        gNames[3],
        gNames[4]);
-      if (strcmp(gNames[4],"-")==1)
-       screenNumber=2;
+      if (strcmp(gNames[4],"-")!=0)
+        screenNumber=2; // Oui mais non, on changera d'écran uniquement une fois le rôle reçu !
       break;
     }
    break;

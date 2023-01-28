@@ -233,11 +233,16 @@ int main(int argc, char *argv[])
 					
 					melangerDeck();
 					affecterRoles();
-					//razJoueurs(); C'est quoi razJoueurs wsh ?
+                                        //tcpClients.score = 0;                   //razJoueurs(); C'est quoi razJoueurs wsh ?
 					//broadcastRoles();
-					char *word = mpts[rand()%10]; //tirer un mot au hasard, penser à changer me 10 si on ajoute/enlève des mots
-					//pour les espions
-					//	envoyer lle mot
+					char *word = mpts[rand()%10];           //tirer un mot au hasard, penser à changer le 10 si on ajoute/enlève des mots
+                                        for(int i=0; i<5; ++i)                  //pour les espions, envoyer le mot
+                                        {
+                                                if (tcpClients[i].role == 1)    // if(tcpClients[i].role) suffirait mais c'est plus lisible ainsi
+                                                {
+
+                                                }
+                                        }
 					//joueurSuivant=0;
 					//nbReponses=0;
 					
