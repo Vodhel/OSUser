@@ -132,7 +132,7 @@ void broadcastRoles() //j'ai pas compris les regles du jeu à 100% mais ici, et 
         char* temp_str;
         for(int i = 0; i < nbClients; i++)
         {
-                sprintf(temp_str, "%d");
+                sprintf(temp_str, "%d", tcpClients[i].role);
                 strcat(mess,temp_str);
         }
         printf("broadcastRoles() message: %s", mess); //pour tester, à retirer

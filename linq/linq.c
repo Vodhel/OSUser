@@ -221,6 +221,8 @@ void myRenderText(char *m,int x,int y)
      SDL_FreeSurface(surfaceMessage);
 }
 
+
+
 void manageRedraw()
 {
  switch (screenNumber)
@@ -236,8 +238,7 @@ void manageRedraw()
     if (connectEnabled==1)
     {
      SDL_Rect dstrect = { 0, 0, 200, 50 };
-     SDL_RenderCopy(renderer, 
-		texture_connectbutton, NULL, &dstrect);
+     SDL_RenderCopy(renderer, texture_connectbutton, NULL, &dstrect);
     }
 
     if (cptWord>0)
@@ -263,6 +264,9 @@ void manageRedraw()
  SDL_RenderPresent(renderer);
 }
 
+
+
+
 int main(int argc, char ** argv)
 {
  int ret;
@@ -282,8 +286,7 @@ int main(int argc, char ** argv)
  SDL_Init(SDL_INIT_VIDEO);
  TTF_Init();
  
- window = SDL_CreateWindow("SDL2 LINQ",
-        	SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1024, 768, 0);
+ window = SDL_CreateWindow("SDL2 LINQ", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1024, 768, 0);
  
 renderer = SDL_CreateRenderer(window, -1, 0);
 
