@@ -252,6 +252,9 @@ void manageRedraw()
 
     myRenderText(gNames[0],105,50);
     myRenderText(gNames[1],105,110);
+    myRenderText(gNames[2],105,170);
+    myRenderText(gNames[3],105,230);
+    myRenderText(gNames[4],105,300);
    }
    break;
   default:
