@@ -19,6 +19,7 @@ int gClientPort;
 char gName[256];
 char gNames[5][256];
 int gId;
+int gRole = -1;
 int goEnabled;
 int connectEnabled;
 int screenNumber;
@@ -30,7 +31,7 @@ int mx,my;
 char sendBuffer[256];
 SDL_Window * window;
 SDL_Renderer *renderer;
- 
+
 SDL_Surface *connectbutton;
 SDL_Texture *texture_connectbutton;
 TTF_Font* Sans; 
@@ -84,7 +85,7 @@ void *fn_serveur_tcp(void *arg)
 
                 synchro=1;
 
-                while (synchro);
+                while (synchro); // Permet d'empêcher qu'on écrase le buffer alors qu'il n'a pas encore été traité.
 
      }
 }
@@ -191,8 +192,17 @@ void manageNetwork()
        gNames[2],
        gNames[3],
        gNames[4]);
-      if (strcmp(gNames[4],"-")!=0)
-        screenNumber=2; // Oui mais non, on changera d'écran uniquement une fois le rôle reçu !
+
+      // Message 'R' : le joueur reçoit les rôles. En théorie tous les joueurs sont connectés, mais on laisse un petit if au cas où.
+      case 'R' :
+        if (strcmp(gNames[4],"-")!=0)
+        {
+                int temp_gRole[5] = {-1, -1, -1, -1, -1};
+                printf("Le return du scan f : %d\n",sscanf(gbuffer+2,"%d %d %d %d %d",&temp_gRole[0], &temp_gRole[1], &temp_gRole[2], &temp_gRole[3], &temp_gRole[4]));
+                gRole = temp_gRole[gId];
+                printf("ID : %d\nRole : %d\n",gId, gRole);
+                screenNumber=2; // Oui mais non, on changera d'écran uniquement une fois le rôle reçu !
+        }
       break;
     }
    break;
@@ -261,6 +271,8 @@ void manageRedraw()
   case 2:
   {
         SDL_SetRenderDrawColor(renderer, 255, 230, 230, 230);
+        SDL_Rect rect = {0, 0, 1024, 768};
+        SDL_RenderFillRect(renderer, &rect);
 
         myRenderText(gNames[0],450,300);
         myRenderText(gNames[1],250,150);

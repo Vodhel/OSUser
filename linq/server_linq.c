@@ -128,15 +128,15 @@ void affecterRoles()
 void broadcastRoles() //j'ai pas compris les regles du jeu à 100% mais ici, et sauf erreur de ma part,
                                 // il faut envoyer le même message à tlm car la fonction s'appelle "broadcast" truc.
 {       
-        char* mess;
-        char* temp_str;
+        char buffer[256] = "R "; // R pour rôle !
+        char temp_str[256] = "";
         for(int i = 0; i < nbClients; i++)
         {
-                sprintf(temp_str, "%d", tcpClients[i].role);
-                strcat(mess,temp_str);
+                sprintf(temp_str, "%d ", tcpClients[i].role);
+                strcat(buffer,temp_str);
         }
-        printf("broadcastRoles() message: %s", mess); //pour tester, à retirer
-        broadcastMessage(mess);
+        printf("broadcastRoles() message: %s", buffer); //TEST
+        broadcastMessage(buffer);
 }
 
 
@@ -245,8 +245,10 @@ int main(int argc, char *argv[])
                                         fsmServer=1;
 					
 					melangerDeck();
+                                        printDeck(); // TEST
 					affecterRoles();
                                         //tcpClients.score = 0;                   //razJoueurs(); C'est quoi razJoueurs wsh ?
+                                        printf("Test pour le segfault\n");
 					broadcastRoles();
 					char *word = mpts[rand()%10];           //tirer un mot au hasard, penser à changer le 10 si on ajoute/enlève des mots
                                         for(int i=0; i<5; ++i)                  //pour les espions, envoyer le mot
@@ -258,6 +260,7 @@ int main(int argc, char *argv[])
                                         }
 					//joueurSuivant=0;
 					//nbReponses=0;
+                                        return 1; // TEST
 					
 				}
 				break;
