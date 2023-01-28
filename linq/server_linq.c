@@ -125,6 +125,19 @@ void affecterRoles()
                 tcpClients[i].role = deck[i];
 }
 
+void broadcastRoles() //j'ai pas compris les regles du jeu à 100% mais ici, et sauf erreur de ma part,
+                                // il faut envoyer le même message à tlm car la fonction s'appelle "broadcast" truc.
+{       
+        char* mess;
+        char* temp_str;
+        for(int i = 0; i < nbClients; i++)
+        {
+                sprintf(temp_str, "%d");
+                strcat(mess,temp_str);
+        }
+        printf("broadcastRoles() message: %s", mess); //pour tester, à retirer
+        broadcastMessage(mess);
+}
 
 
 int main(int argc, char *argv[])
@@ -234,7 +247,7 @@ int main(int argc, char *argv[])
 					melangerDeck();
 					affecterRoles();
 					//razJoueurs(); C'est quoi razJoueurs wsh ?
-					//broadcastRoles();
+					broadcastRoles();  //j'étais pas sur de ce qu'il fallait faire ici dcp j'ai fait comme le nom de la fonc l'indique et j'ai envoyé les roles de tlm à tlm
 					char *word = mpts[rand()%10]; //tirer un mot au hasard, penser à changer me 10 si on ajoute/enlève des mots
 					//pour les espions
 					//	envoyer lle mot
