@@ -221,6 +221,8 @@ void myRenderText(char *m,int x,int y)
      SDL_FreeSurface(surfaceMessage);
 }
 
+
+
 void manageRedraw()
 {
  switch (screenNumber)
@@ -236,8 +238,7 @@ void manageRedraw()
     if (connectEnabled==1)
     {
      SDL_Rect dstrect = { 0, 0, 200, 50 };
-     SDL_RenderCopy(renderer, 
-		texture_connectbutton, NULL, &dstrect);
+     SDL_RenderCopy(renderer, texture_connectbutton, NULL, &dstrect);
     }
 
     if (cptWord>0)
@@ -246,22 +247,35 @@ void manageRedraw()
    break;
   case 1:
    {
-    SDL_SetRenderDrawColor(renderer, 255, 230, 230, 230);
-    SDL_Rect rect = {0, 0, 1024, 768};
-    SDL_RenderFillRect(renderer, &rect);
+        SDL_SetRenderDrawColor(renderer, 255, 230, 230, 230);
+        SDL_Rect rect = {0, 0, 1024, 768};
+        SDL_RenderFillRect(renderer, &rect);
 
-    myRenderText(gNames[0],105,50);
-    myRenderText(gNames[1],105,110);
-    myRenderText(gNames[2],105,170);
-    myRenderText(gNames[3],105,230);
-    myRenderText(gNames[4],105,300);
+        myRenderText(gNames[0],105,50);
+        myRenderText(gNames[1],105,110);
+        myRenderText(gNames[2],105,170);
+        myRenderText(gNames[3],105,230);
+        myRenderText(gNames[4],105,300);
    }
    break;
+  case 2:
+  {
+        SDL_SetRenderDrawColor(renderer, 255, 230, 230, 230);
+
+        myRenderText(gNames[0],450,300);
+        myRenderText(gNames[1],250,150);
+        myRenderText(gNames[2],500,50);
+        myRenderText(gNames[3],750,150);
+        myRenderText(gNames[4],650,300);
+  }
   default:
    break;
  }
  SDL_RenderPresent(renderer);
 }
+
+
+
 
 int main(int argc, char ** argv)
 {
@@ -282,8 +296,7 @@ int main(int argc, char ** argv)
  SDL_Init(SDL_INIT_VIDEO);
  TTF_Init();
  
- window = SDL_CreateWindow("SDL2 LINQ",
-        	SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1024, 768, 0);
+ window = SDL_CreateWindow("SDL2 LINQ", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1024, 768, 0);
  
 renderer = SDL_CreateRenderer(window, -1, 0);
 
