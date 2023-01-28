@@ -116,6 +116,17 @@ void broadcastMessage(char *mess)
                         mess);
 }
 
+/// Fonctions réalisées par les étudiants pour réaliser le projet.
+
+//On affecte simplement les rôles.
+void affecterRoles()
+{
+        for(int i = 0; i<5; ++i)
+                tcpClients[i].role = deck[i];
+}
+
+
+
 int main(int argc, char *argv[])
 {
      int sockfd, newsockfd, portno;
@@ -214,22 +225,22 @@ int main(int argc, char *argv[])
                                 sprintf(reply,"L %s %s %s %s %s", tcpClients[0].name, tcpClients[1].name, tcpClients[2].name, tcpClients[3].name,tcpClients[4].name);
                                 broadcastMessage(reply);
 
-				// Si le nombre de joueurs atteint 4, alors on peut lancer le jeu
+				// Si le nombre de joueurs atteint 5, alors on peut lancer le jeu
 
                                 if (nbClients==5)
 				{
                                         fsmServer=1;
-					/*
+					
 					melangerDeck();
 					affecterRoles();
-					razJoueurs();
-					broadcastRoles();
-					tirer mot au hasard
-					pour les espions
-						envoyer lle mot
-					joueurSuivant=0;
-					nbReponses=0;
-					*/
+					//razJoueurs(); C'est quoi razJoueurs wsh ?
+					//broadcastRoles();
+					char *word = mpts[rand()%10]; //tirer un mot au hasard, penser à changer me 10 si on ajoute/enlève des mots
+					//pour les espions
+					//	envoyer lle mot
+					//joueurSuivant=0;
+					//nbReponses=0;
+					
 				}
 				break;
                 }
