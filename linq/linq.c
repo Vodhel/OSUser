@@ -343,9 +343,9 @@ void manageRedraw()
 
 		for(int i = 0; i < 5; i++)
 		{
-			for(int j = 0; i < 2; j++)
+			for(int j = 0; j < 2; j++)
 			{
-				myRenderText(gWords[j][i], 50 + (200*i), 200 + (50*j) );
+				myRenderText(gWords[i][j], 50 + (200*i), 200 + (50*j) );
 			}
 		}
 
