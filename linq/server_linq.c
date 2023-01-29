@@ -25,6 +25,7 @@ int fsmServer;
 int deck[5]={0,0,0,1,1};
 char *mpts[]={"bas","muse","boulet","spectre","patron","moulin","piano","oseille","billet","Rome"};
 int joueurCourant;
+int nbReponses;
 
 void error(const char *msg)
 {
@@ -241,22 +242,24 @@ int main(int argc, char *argv[])
                                         fsmServer=1;
 					
 					melangerDeck();
-                                        printDeck(); // TEST
+                                        for (int i = 0; i<5; ++i) tcpClients[i].score = 0;                   //razJoueurs(); C'est quoi razJoueurs wsh ? chais po frr xDDD
+
 					affecterRoles();
-                                        //tcpClients.score = 0;                   //razJoueurs(); C'est quoi razJoueurs wsh ? chais po frr
-                                        printf("Test pour le segfault\n");
 					broadcastRoles();
+
 					char *word = mpts[rand()%10];           //tirer un mot au hasard, penser à changer le 10 si on ajoute/enlève des mots
+                                        sprintf(reply, "W %s", word);
                                         for(int i=0; i<5; ++i)                  //pour les espions, envoyer le mot
                                         {
                                                 if (tcpClients[i].role == 1)    // if(tcpClients[i].role) suffirait mais c'est plus lisible ainsi
                                                 {
-
+                                                        sendMessageToClient(tcpClients[i].ipAddress,
+                                                        tcpClients[i].port,
+                                                        reply);
                                                 }
                                         }
-					//joueurSuivant=0;
-					//nbReponses=0;
-                                        return 1; // TEST
+					joueurCourant=0;
+					nbReponses=0;
 					
 				}
 				break;
