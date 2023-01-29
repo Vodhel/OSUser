@@ -10,8 +10,6 @@
 #include <netinet/in.h>
 #include <netdb.h>
 
-#define ECRAN_3_CONTRE_ESPION 3
-#define ECRAN_3_ESPION 4
 
 pthread_t thread_serveur_tcp_id;
 char gbuffer[256];
@@ -138,8 +136,7 @@ void manageEvent(SDL_Event event)
 	{
 		switch(screenNumber)
 		{
-			case ECRAN_3_CONTRE_ESPION: //pas de break; entre deux case fait un OU logique 
-			case ECRAN_3_ESPION:
+			case 3:  
 			{
 				int car=event.key.keysym.sym;
     			printf("%d\n",event.key.keysym.sym);
