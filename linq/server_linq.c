@@ -18,6 +18,7 @@ struct _client
 	int choix[2];
 	int score;
 	int role;
+        int cible; // Compte le nombre de personne qui suspectent ce joueur d'être un espion.
 } tcpClients[5];
 
 int nbClients;
@@ -26,6 +27,9 @@ int deck[5]={0,0,0,1,1};
 char *mpts[]={"bas","muse","boulet","spectre","patron","moulin","piano","oseille","billet","Rome"};
 int joueurCourant;
 int nbReponses;
+int idEspion[2];
+int quit;
+char *secretWord;
 
 void error(const char *msg)
 {
@@ -122,8 +126,16 @@ void broadcastMessage(char *mess)
 //On affecte simplement les rôles.
 void affecterRoles()
 {
+        int k=0;
         for(int i = 0; i<5; ++i)
+        {
                 tcpClients[i].role = deck[i];
+                if(deck[i] == 1)
+                {
+                        idEspion[k] = i;
+                        k++; // Y'a moyen de fusionner ces deux lignes mais c'est pas lisible et en plus je sais plus si c'est k++ ou ++k
+                }
+        }
 }
 
 void broadcastRoles() //j'ai pas compris les regles du jeu à 100% mais ici, et sauf erreur de ma part,
@@ -184,8 +196,8 @@ int main(int argc, char *argv[])
         	strcpy(tcpClients[i].words[0],"-");
         	strcpy(tcpClients[i].words[1],"-");
 	}
-
-     while (1)
+     quit = 0;
+     while (quit == 0)
      {    
      	newsockfd = accept(sockfd, 
                  (struct sockaddr *) &cli_addr, 
@@ -242,12 +254,15 @@ int main(int argc, char *argv[])
                                         fsmServer=1;
 					
 					melangerDeck();
-                                        for (int i = 0; i<5; ++i) tcpClients[i].score = 0;                   //razJoueurs(); C'est quoi razJoueurs wsh ? chais po frr xDDD
-
+                                        for (int i = 0; i<5; ++i) 
+                                        {
+                                                tcpClients[i].score = 0;                   //razJoueurs(); C'est quoi razJoueurs wsh ? chais po frr xDDD
+                                                tcpClients[i].cible = 0;
+                                        }
 					affecterRoles();
 					broadcastRoles();
 
-					char *secretWord = mpts[rand()%10];           //tirer un mot au hasard, penser à changer le 10 si on ajoute/enlève des mots
+					secretWord = mpts[rand()%10];           //tirer un mot au hasard, penser à changer le 10 si on ajoute/enlève des mots
                                         sprintf(reply, "W %s", secretWord);
                                         for(int i=0; i<5; ++i)                  //pour les espions, envoyer le mot
                                         {
@@ -293,7 +308,10 @@ int main(int argc, char *argv[])
 
 					nbReponses++;
 					if(nbReponses==10)
-                                                fsmServer = 2;
+                                                {
+                                                        fsmServer = 2;
+                                                        nbReponses = 0;
+                                                }
                                         else
                                         {
 
@@ -313,11 +331,56 @@ int main(int argc, char *argv[])
         }
         else if (fsmServer ==1)
         {
-                
+                int joueurId;
+                char motJoueur[256];
+                int cibleJoueur[2];
+
+                switch(buffer[0])
+                {
+                        // Message 'A' : On reçoit une réponse d'un joueur
+                        case 'A':
+                                {
+                                        sscanf(buffer+2, "%d %d %d %s", &joueurId, &cibleJoueur[0], &cibleJoueur[1], motJoueur);
+                                        printf("On a reçu : \nID : %d\nCible : %d et %d\n motSecret : %d\n", joueurId, cibleJoueur[0], cibleJoueur[1], motJoueur); //TEST
+
+                                        if (tcpClients[joueurId].role == 1) //Dans le cas d'une réponse d'un espion :
+                                        {
+                                                if(tcpClients[cibleJoueur[0]].role == 1) tcpClients[joueurId].score++;
+                                        }
+                                        else
+                                        {
+                                                for(int i=0; i<2; ++i)
+                                                {
+                                                        if(tcpClients[cibleJoueur[i]].role == 1)
+                                                        {
+                                                                tcpClients[joueurId].score++;
+                                                                tcpClients[cibleJoueur[i]].cible++;
+                                                        }
+                                                }
+                                                if(strcmp(motJoueur, secretWord) == 0) tcpClients[joueurId].score+=2;
+                                        }
+
+                                        nbReponses++;
+                                        if(nbReponses == 5)
+                                        {
+                                                for(int i=0; i<5;++i)
+                                                {
+                                                        if((tcpClients[i].role == 1) && (tcpClients[i].cible == 0)) tcpClients[i].score += 3;
+
+                                                        sprintf(reply, "S %d %d %s %d",idEspion[0], idEspion[1], secretWord, tcpClients[i].score);
+                                                        sendMessageToClient(tcpClients[i].ipAddress,
+                                                        tcpClients[i].port,
+                                                        reply);
+                                                }
+                                                quit = 1; // Fermeture paisible du serveur
+                                        }
+                                break;
+                                }
+                }
         }
 
      	close(newsockfd);
      }
      close(sockfd);
-     return 0; 
+     return EXIT_SUCCESS; 
 }
