@@ -374,41 +374,8 @@ void manageRedraw()
 
   } 
   break;
-
-/*  case 3: //affiché lors du tour du joueur
-  {
-
-        SDL_SetRenderDrawColor(renderer, 255, 230, 230, 230);
-        SDL_Rect rect = {0, 0, 1024, 768};
-        SDL_RenderFillRect(renderer, &rect);
-
-        myRenderText(gNames[0],400,400);
-        myRenderText(gNames[1],250,200);
-        myRenderText(gNames[2],500,80);
-        myRenderText(gNames[3],750,200);
-        myRenderText(gNames[4],700,400);
-        
-        if(gRole == 1) //faut ajouter l'affichage du mot secret ici
-        {
-                myRenderText("Role: espion", 0, 0);
-        }
-        if(gRole == 0)
-        {
-                myRenderText("Role: contre-espion", 0, 0);
-        }
-
-        SDL_Rect textBoxBG = {450, 560, 330, 60};
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0,0);
-        SDL_RenderDrawRect(renderer, &textBoxBG);
-        myRenderText("Mot: ", 320, 545);
-        if (cptWord>0)
-        {
-            myRenderText(word, 450, 550);
-        }
-        
-  }*/
   
-  case 3: //écran ou on tente de deviner les espions
+  case 3: //écran où on tente de deviner les espions
   {
 
 	//on efface l'écran:
@@ -418,33 +385,33 @@ void manageRedraw()
 
 
 	//partie commune aux deux roles:
-    SDL_Rect ButtonBG0 = {150, 300, 175, 80};
+    SDL_Rect ButtonBG0 = {15, 300, 240, 80};
     SDL_SetRenderDrawColor(renderer, 0, 0, 0,0);
     SDL_RenderDrawRect(renderer, &ButtonBG0);
 
-    SDL_Rect ButtonBG1 = {350, 300, 175, 80};
+    SDL_Rect ButtonBG1 = {265, 300, 240, 80};
     SDL_SetRenderDrawColor(renderer, 0, 0, 0,0);
     SDL_RenderDrawRect(renderer, &ButtonBG1);
 
-    SDL_Rect ButtonBG2 = {550, 300, 175, 80};
+    SDL_Rect ButtonBG2 = {515, 300, 240, 80};
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0,0);
     SDL_RenderDrawRect(renderer, &ButtonBG2);
 
-    SDL_Rect ButtonBG3 = {750, 300, 175, 80};
+    SDL_Rect ButtonBG3 = {765, 300, 240, 80};
     SDL_SetRenderDrawColor(renderer, 0, 0, 0,0);
     SDL_RenderDrawRect(renderer, &ButtonBG3);
 
+    int j = 0;
     for(int i = 0; i < 5; i++)
     {
-        int j = 1;
         if (i != gId)
         {
-            myRenderText(gNames[i],(150*(j)), 300);
+            myRenderText(gNames[i],(250*(j)+15), 300);
             j++;
         }
     }
 
-	//partie fonction du roule:
+	//partie en fonction du role:
     if(gRole == 1)
     {
 		myRenderText("Qui est l'autre espion?",0,0);
@@ -468,6 +435,7 @@ void manageRedraw()
 
 int main(int argc, char ** argv)
 {
+	
  int ret;
 
  if (argc<6)
