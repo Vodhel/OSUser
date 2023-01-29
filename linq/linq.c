@@ -10,6 +10,11 @@
 #include <netinet/in.h>
 #include <netdb.h>
 
+#define ECRAN_2_ESPION 3
+#define ECRAN_2_CONTRE_ESPION 4
+#define ECRAN_3_ESPION 5
+#define ECRAN_3_CONTRE_ESPION 6
+
 pthread_t thread_serveur_tcp_id;
 char gbuffer[256];
 char gServerIpAddress[256];
@@ -37,6 +42,46 @@ SDL_Texture *texture_connectbutton;
 TTF_Font* Sans; 
 
 volatile int synchro;
+
+/*
+typedef struct Textbox
+{
+        SDL_Surface* textbox_surface;
+        SDL_Texture* textbox_texture;
+
+} Textbox;
+
+Textbox* renderTextbox(char* initial_str, int x, int y)
+{ 
+        SDL_Color col1 = {0, 0, 0};
+        Textbox* pTextbox = malloc(sizeof(Textbox));
+        *(pTextbox->textbox_surface) = TTF_RenderText_Solid(Sans, m, col1);
+        SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+        return pTextbox;
+}
+*/
+
+/*
+
+void myRenderTextbox(char* m, int x,int y)
+{
+     SDL_Color col1 = {0, 0, 0};
+     SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, m, col1);
+     SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+
+     SDL_Rect Message_rect;
+     Message_rect.x = x;
+     Message_rect.y = y;
+     Message_rect.w = surfaceMessage->w;
+     Message_rect.h = surfaceMessage->h;
+
+     SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+     SDL_DestroyTexture(Message);
+     SDL_FreeSurface(surfaceMessage);
+}
+
+*/
+
 
 void *fn_serveur_tcp(void *arg)
 {
@@ -177,7 +222,7 @@ void manageNetwork()
      // Message 'I' : le joueur recoit son Id
      case 'I':
       sscanf(gbuffer+2,"%d",&gId);
-      screenNumber=1;
+      screenNumber=ECRAN_3_CONTRE_ESPION;
       break;
     }
     break;
@@ -214,11 +259,8 @@ void manageNetwork()
 void myRenderText(char *m,int x,int y)
 {
      SDL_Color col1 = {0, 0, 0};
-     SDL_Surface* surfaceMessage = 
-	TTF_RenderText_Solid(Sans, m, col1);
-     SDL_Texture* Message = 
-	SDL_CreateTextureFromSurface(renderer, 
-		surfaceMessage);
+     SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, m, col1);
+     SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
 
      SDL_Rect Message_rect;
      Message_rect.x = x;
@@ -237,7 +279,7 @@ void manageRedraw()
 {
  switch (screenNumber)
  {
-  case 0:
+  case 0: //connect
    {
     // On efface l'écran
     SDL_SetRenderDrawColor(renderer, 255, 230, 230, 230);
@@ -255,7 +297,7 @@ void manageRedraw()
 	myRenderText(word,105,350);
    }
    break;
-  case 1:
+  case 1:  //"salle d'attente"
    {
         SDL_SetRenderDrawColor(renderer, 255, 230, 230, 230);
         SDL_Rect rect = {0, 0, 1024, 768};
@@ -268,18 +310,90 @@ void manageRedraw()
         myRenderText(gNames[4],105,300);
    }
    break;
-  case 2:
+
+//On pourrait remplacer les ecrans a deux version par un if(espion) stratigiquement placé mais pour l'instant je vais laisser comme ça
+
+  case ECRAN_2_ESPION: //affiché lors des tours des autres joueurs 
   {
         SDL_SetRenderDrawColor(renderer, 255, 230, 230, 230);
         SDL_Rect rect = {0, 0, 1024, 768};
         SDL_RenderFillRect(renderer, &rect);
 
-        myRenderText(gNames[0],450,300);
-        myRenderText(gNames[1],250,150);
-        myRenderText(gNames[2],500,50);
-        myRenderText(gNames[3],750,150);
-        myRenderText(gNames[4],650,300);
+        myRenderText(gNames[0],400,400);
+        myRenderText(gNames[1],250,200);
+        myRenderText(gNames[2],500,80);
+        myRenderText(gNames[3],750,200);
+        myRenderText(gNames[4],700,400);
+        myRenderText("Role: espion", 0, 0);
+  } 
+  break;
+
+case ECRAN_2_CONTRE_ESPION: //affiché lors des tours des autres joueurs 
+  {
+        SDL_SetRenderDrawColor(renderer, 255, 230, 230, 230);
+        SDL_Rect rect = {0, 0, 1024, 768};
+        SDL_RenderFillRect(renderer, &rect);
+
+        myRenderText(gNames[0],400,400);
+        myRenderText(gNames[1],250,200);
+        myRenderText(gNames[2],500,80);
+        myRenderText(gNames[3],750,200);
+        myRenderText(gNames[4],700,400);
+        myRenderText("Role: contre-espion", 0, 0);
+  } 
+  break;
+
+  case ECRAN_3_ESPION: //affiché lors du tour de l'espion
+  {
+
+        SDL_SetRenderDrawColor(renderer, 255, 230, 230, 230);
+        SDL_Rect rect = {0, 0, 1024, 768};
+        SDL_RenderFillRect(renderer, &rect);
+
+        myRenderText(gNames[0],400,400);
+        myRenderText(gNames[1],250,200);
+        myRenderText(gNames[2],500,80);
+        myRenderText(gNames[3],750,200);
+        myRenderText(gNames[4],700,400);
+        myRenderText("Role: espion", 0, 0);
+
+        SDL_Rect textBoxBG = {450, 560, 330, 60};
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0,0);
+        SDL_RenderDrawRect(renderer, &textBoxBG);
+        myRenderText("Mot: ", 320, 545);
+        if (cptWord>0)
+        {
+                myRenderText(word, 450, 550);
+        }
+        
   }
+  break;
+
+  case ECRAN_3_CONTRE_ESPION: //affiché lors du tour du contre-espion
+  {
+        SDL_SetRenderDrawColor(renderer, 255, 230, 230, 230);
+        SDL_Rect rect = {0, 0, 1024, 768};
+        SDL_RenderFillRect(renderer, &rect);
+
+        myRenderText(gNames[0],400,400);
+        myRenderText(gNames[1],250,200);
+        myRenderText(gNames[2],500,80);
+        myRenderText(gNames[3],750,200);
+        myRenderText(gNames[4],700,400);
+        myRenderText("Role: contre-espion", 0, 0);
+
+        SDL_Rect textBoxBG = {450, 560, 330, 60};
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0,0);
+        SDL_RenderDrawRect(renderer, &textBoxBG);
+        myRenderText("Mot: ", 320, 545);
+        if (cptWord>0)
+        {
+                myRenderText(word, 450, 550);
+        }
+        
+  }
+  break;
+
   default:
    break;
  }

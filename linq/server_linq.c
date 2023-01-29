@@ -247,7 +247,7 @@ int main(int argc, char *argv[])
 					melangerDeck();
                                         printDeck(); // TEST
 					affecterRoles();
-                                        //tcpClients.score = 0;                   //razJoueurs(); C'est quoi razJoueurs wsh ?
+                                        //tcpClients.score = 0;                   //razJoueurs(); C'est quoi razJoueurs wsh ? chais po frr
                                         printf("Test pour le segfault\n");
 					broadcastRoles();
 					char *word = mpts[rand()%10];           //tirer un mot au hasard, penser à changer le 10 si on ajoute/enlève des mots
