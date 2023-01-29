@@ -29,6 +29,7 @@ int goEnabled;
 int connectEnabled;
 int screenNumber;
 char word[40];
+char secretWord[40];
 int cptWord;
 int quit = 0;
 SDL_Event event;
@@ -268,11 +269,20 @@ void manageNetwork()
                 //gRole = temp_gRole[gId];
                 //printf("Les temp roles : %d %d %d %d %d", temp_gRole[0], temp_gRole[1], temp_gRole[2], temp_gRole[3], temp_gRole[4]);
                 printf("ID : %d\nRole : %d\n",gId, gRole);
-                screenNumber=2; // Oui mais non, on changera d'écran uniquement une fois le rôle reçu !
+                if (gRole == 0) screenNumber=2; // On change d'écrans ssi : non-espion | (espion & on a le mot)
         }
+        break;
+
+      // Message 'W' : Le joueur est un espion et reçoit alors le mot secret
+      case 'W' :
+        sscanf(gbuffer+2, "%s", &secretWord);
+        screenNumber=2; // On change d'écrans ssi : non-espion | (espion & on a le mot)
         break;
     }
    break;
+
+   case 2:
+
   }
   synchro=0;
  }
