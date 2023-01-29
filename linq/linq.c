@@ -13,6 +13,8 @@
 #define ECRAN_3_CONTRE_ESPION 3
 #define ECRAN_3_ESPION 4
 
+int testFlag = 1; // TEST
+int flagFin = 0; //TEST
 pthread_t thread_serveur_tcp_id;
 char gbuffer[256];
 char gServerIpAddress[256];
@@ -276,6 +278,8 @@ void manageNetwork()
                 // Message 'S' : Réception du score et des bonnes réponses.
                 case 'S' : 
                         sscanf(gbuffer+2, "%d %d %s %d", &idEspion[0], &idEspion[1], &secretWord, &score);
+                        printf("Données reçu : %d %d %s %d\n", idEspion[0], idEspion[1], secretWord, score); //TEST
+                        flagFin = 1; // TEST
         }
     break;
 
@@ -437,7 +441,15 @@ void manageRedraw()
 		myRenderText("Qui sont les deux espions?",0,0);
     }
 
-
+        // DEBUT TEST ZONE
+        if(testFlag == 1)
+        {
+                sprintf(sendBuffer, "A %d 0 1 boulet", gId);
+                sendMessageToServer(gServerIpAddress, gServerPort,sendBuffer);
+                printf("\nMessage envoyé : %s\n", sendBuffer);
+                testFlag = 0;
+        }
+        // FIN TEST ZONE
   } 
   break;
 
@@ -504,6 +516,7 @@ while (!quit)
   manageEvent(event);
  manageNetwork();
  manageRedraw();
+ if (flagFin) return 0; // TEST
 }
  
  SDL_DestroyRenderer(renderer);
