@@ -48,9 +48,11 @@ TTF_Font* Sans;
 
 volatile int synchro;
 
-int flagBoutonsVote[4] = {0, 0, 0, 0}; //indique l'état des quatre boutons de "vote": appuyé ou pas 
+int numeroDuChoix[4] = {-1,-1,-1,-1}; //pour garder le numero du choix qu'on vient de faire dans choix[2] (premier ou second), utile pour dé-clicker un bouton
+int flagBoutonAppuye[4] = {0, 0, 0, 0}; //indique l'état des quatre boutons de "vote": appuyé ou pas 
 int choix[2] = {-1, -1};  //choix actuels du joueur avant validation et envoi
 int flagChoixFait = 0;  //on envoit la reponse du joueur au serveur quand ce flag est levé 
+
 
 void *fn_serveur_tcp(void *arg)
 {
@@ -200,8 +202,7 @@ void manageEvent(SDL_Event event)
 
 	case 3: //phase de "vote"
 	{
-
-		//petit tableau temp pour stocker les noms des autres joueurs sans le notre
+		//petit tableau temp pour stocker les noms des autres joueurs sans le notre, probablement à sortir de cette fonc
 		char nomsAutresJoueurs[4][256];
 		int j = 0;
 		for (int i = 0; i < 5; i++)
@@ -214,57 +215,83 @@ void manageEvent(SDL_Event event)
 	    }
 
 	    SDL_GetMouseState( &mx, &my );
-		if(choix[0] == -1 || choix[1] == -1)
+        if ((15<mx)&&(mx<(15+240)) && (300<my)&&(my<(300+80))) // rectangle de 240x80 situé à (15, 300) {15, 300, 240, 80}
         {
-     	    if ((15<mx)&&(mx<(15+240)) && (300<my)&&(my<(300+80))) // rectangle de 240x80 situé à (15, 300) {15, 300, 240, 80}
-		    {
-		    	flagBoutonsVote[0] = 1; //on leve le flag du premier bouton
-
-		    	if (choix[0] == -1) { choix[0] = 0; }
-		    	else if (choix[1] == -1) { choix[1] = 0; }
-		    }
-
-     	    if ((265<mx)&&(mx<(265+240)) && (300<my)&&(my<(300+80))) // rectangle de 240x80 situé à (265, 300) {265, 300, 240, 80};
-		    {
-		    	flagBoutonsVote[1] = 1;
-
-		    	if (choix[0] == -1) { choix[0] = 1; }
-		    	else if (choix[1] == -1) { choix[1] = 1; }
-		    }
-
-		    if ((515<mx)&&(mx<(515+240)) && (300<my)&&(my<(300+80))) //{515, 300, 240, 80}
-		    {
-		    	flagBoutonsVote[2] = 1; 
-
-		    	if (choix[0] == -1) { choix[0] = 2; }
-		    	else if (choix[1] == -1) { choix[1] = 2; }
-		    }
-
-		    if ((765<mx)&&(mx<(765+240)) && (300<my)&&(my<(300+80)))
-		    {
-		    	flagBoutonsVote[3] = 1; 
-
-		    	if (choix[0] == -1) { choix[0] = 3; }
-		    	else if (choix[1] == -1) { choix[1] = 3; }
-		    }
-		}
-
-        else
-        {
-            if((765<mx)&&(mx<(765+240)) && (420<my)&&(my<(420+80)))// {765, 420, 240, 80}
+            if(flagBoutonAppuye[0] == 0)
             {
-                flagChoixFait = 1;
-                exit(1); //DEBUG 
+                flagBoutonAppuye[0] = 1; //on leve le flag du premier bouton
+
+                if (choix[0] == -1) { choix[0] = 0; numeroDuChoix[0] = 0;}
+                else if (choix[1] == -1) { choix[1] = 0; numeroDuChoix[0] = 1;}
+            }
+            else
+            {
+                choix[numeroDuChoix[0]] = -1;
+                flagBoutonAppuye[0] = 0;
             }
         }
 
+        if ((265<mx)&&(mx<(265+240)) && (300<my)&&(my<(300+80))) // rectangle de 240x80 situé à (265, 300) {265, 300, 240, 80};
+        {
+            if(flagBoutonAppuye[1] == 0)
+            {
+                flagBoutonAppuye[1] = 1;
+
+                if (choix[0] == -1) { choix[0] = 1; numeroDuChoix[1] = 0; }
+                else if (choix[1] == -1) { choix[1] = 1; numeroDuChoix[1] = 1; }
+            }
+            else
+            {
+                choix[numeroDuChoix[1]] = -1;
+                flagBoutonAppuye[1] = 0;
+            }
+        }
+
+        if ((515<mx)&&(mx<(515+240)) && (300<my)&&(my<(300+80))) //{515, 300, 240, 80}
+        {
+            if(flagBoutonAppuye[2] == 0)
+            {
+                flagBoutonAppuye[2] = 1; 
+
+                if (choix[0] == -1) { choix[0] = 2; numeroDuChoix[2] = 0;}
+                else if (choix[1] == -1) { choix[1] = 2; numeroDuChoix[2] = 1;}
+            }
+            else
+            {
+                choix[numeroDuChoix[2]] = -1;
+                flagBoutonAppuye[2] = 0;
+            }
+        }
+
+        if ((765<mx)&&(mx<(765+240)) && (300<my)&&(my<(300+80)))
+        {
+            if(flagBoutonAppuye[3] == 0)
+            {
+                flagBoutonAppuye[3] = 1; 
+
+                if (choix[0] == -1) { choix[0] = 3; numeroDuChoix[3] = 0;}
+                else if (choix[1] == -1) { choix[1] = 3; numeroDuChoix[3] = 1;}
+            }
+            else
+            {
+                choix[numeroDuChoix[3]] = -1;
+                flagBoutonAppuye[3] = 0;
+            }
+        }
+
+        if((765<mx)&&(mx<(765+240)) && (420<my)&&(my<(420+80)))// {765, 420, 240, 80}
+        {
+            if(choix[0] != -1 && choix[1] != -1)
+            {
+                flagChoixFait = 1;
+                //envoyerLesChoixAuServeur();
+            }
+        }
 	}
 	break;
 
-    default:
-    	break;
+    default: break;
 	}
-
 	}
 }
 
@@ -476,7 +503,7 @@ void manageRedraw()
     SDL_Rect ButtonBG0 = {15, 300, 240, 80};
     SDL_SetRenderDrawColor(renderer, 0, 0, 0,0);
     SDL_RenderDrawRect(renderer, &ButtonBG0);
-    if(flagBoutonsVote[0] == 1)  //si le joueur a appuyé sur ce bouton, on le remplit avec du vert
+    if(flagBoutonAppuye[0] == 1)  //si le joueur a appuyé sur ce bouton, on le remplit avec du vert
     {
         SDL_SetRenderDrawColor(renderer, 1, 50, 32, 100);
         SDL_RenderFillRect(renderer, &ButtonBG0);
@@ -485,7 +512,7 @@ void manageRedraw()
     SDL_Rect ButtonBG1 = {265, 300, 240, 80};
     SDL_SetRenderDrawColor(renderer, 0, 0, 0,0);
     SDL_RenderDrawRect(renderer, &ButtonBG1);
-    if(flagBoutonsVote[1] == 1)
+    if(flagBoutonAppuye[1] == 1)
     {
         SDL_SetRenderDrawColor(renderer, 1, 50, 32, 100);
         SDL_RenderFillRect(renderer, &ButtonBG1);
@@ -494,7 +521,7 @@ void manageRedraw()
     SDL_Rect ButtonBG2 = {515, 300, 240, 80};
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0,0);
     SDL_RenderDrawRect(renderer, &ButtonBG2);
-    if(flagBoutonsVote[2] == 1)
+    if(flagBoutonAppuye[2] == 1)
     {
         SDL_SetRenderDrawColor(renderer, 1, 50, 32, 100);
         SDL_RenderFillRect(renderer, &ButtonBG2);
@@ -503,7 +530,7 @@ void manageRedraw()
     SDL_Rect ButtonBG3 = {765, 300, 240, 80};
     SDL_SetRenderDrawColor(renderer, 0, 0, 0,0);
     SDL_RenderDrawRect(renderer, &ButtonBG3);
-    if(flagBoutonsVote[3] == 1)
+    if(flagBoutonAppuye[3] == 1)
     {
         SDL_SetRenderDrawColor(renderer, 1, 50, 32, 100);
         SDL_RenderFillRect(renderer, &ButtonBG3);
