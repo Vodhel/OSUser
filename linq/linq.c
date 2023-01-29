@@ -344,7 +344,15 @@ void manageRedraw()
                 myRenderText(word, 450, 550);
         }
         
-}
+  }
+  
+  case 4: //écran ou on tente de deviner les espions
+  {
+
+
+  } 
+  break;
+
   break;
   default:
    break;
