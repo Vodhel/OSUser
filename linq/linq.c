@@ -136,7 +136,7 @@ void manageEvent(SDL_Event event)
 	{
 		switch(screenNumber)
 		{
-			case 3:  //ecran avec textbox
+			case 2:  //ecran avec textbox
 			{
 				int car=event.key.keysym.sym;
     			printf("%d\n",event.key.keysym.sym);
@@ -148,6 +148,7 @@ void manageEvent(SDL_Event event)
 
 				else if (car == 10)   //si touche entrée
 				{
+					goEnabled =0;
 					//envoyerMotAuServeur(message);
 					//screenNumber = ecran suivant , s'il ne faut faire ça ailleurs
 					
@@ -300,7 +301,7 @@ void manageRedraw()
 
 //On pourrait remplacer les ecrans a deux version par un if(espion) stratigiquement placé mais pour l'instant je vais laisser comme ça
 
-  case 2: //affiché lors des tours des autres joueurs 
+  case 2:  
   {
         SDL_SetRenderDrawColor(renderer, 255, 230, 230, 230);
         SDL_Rect rect = {0, 0, 1024, 768};
@@ -313,17 +314,31 @@ void manageRedraw()
         myRenderText(gNames[4],700,400);
         if(gRole == 1) //faut ajouter l'affichage du mot secret ici
         {
-                myRenderText("Role: espion", 0, 0);
+            myRenderText("Role: espion", 0, 0);
+			myRenderText("Mot secret: ", 800, 0);
+			myRenderText(secretWord, 850, 0);
         }
         if(gRole == 0)
         {
                 myRenderText("Role: contre-espion", 0, 0);
         }
 
+		if(goEnabled == 1)
+		{
+        	SDL_Rect textBoxBG = {450, 560, 330, 60};
+        	SDL_SetRenderDrawColor(renderer, 0, 0, 0,0);
+        	SDL_RenderDrawRect(renderer, &textBoxBG);
+        	myRenderText("Mot: ", 320, 545);
+        	if (cptWord>0)
+        	{
+        	    myRenderText(word, 450, 550);
+        	}
+		}
+
   } 
   break;
 
-  case 3: //affiché lors du tour du joueur
+/*  case 3: //affiché lors du tour du joueur
   {
 
         SDL_SetRenderDrawColor(renderer, 255, 230, 230, 230);
@@ -351,12 +366,12 @@ void manageRedraw()
         myRenderText("Mot: ", 320, 545);
         if (cptWord>0)
         {
-                myRenderText(word, 450, 550);
+            myRenderText(word, 450, 550);
         }
         
-  }
+  }*/
   
-  case 4: //écran ou on tente de deviner les espions
+  case 3: //écran ou on tente de deviner les espions
   {
 
 		//on efface l'écran:
