@@ -335,11 +335,22 @@ void manageRedraw()
         SDL_Rect rect = {0, 0, 1024, 768};
         SDL_RenderFillRect(renderer, &rect);
 
+		//j'aurais pu faire ça avec un for mais ct trop tard quand j'ai realisé hihi
         myRenderText(gNames[0],50,200);
         myRenderText(gNames[1],250,200);
         myRenderText(gNames[2],450,200);
         myRenderText(gNames[3],650,200);
         myRenderText(gNames[4],850,200);
+
+		for(int i = 0; i < 5; i++)
+		{
+			for(int j = 0; i < 2; j++)
+			{
+				myRenderText(gWords[j][i], 50 + (200*i), 200 + (50*j) );
+			}
+		}
+
+
         if(gRole == 1) //faut ajouter l'affichage du mot secret ici
         {
             myRenderText("Role: espion", 0, 0);
