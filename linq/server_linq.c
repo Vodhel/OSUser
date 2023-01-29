@@ -329,7 +329,7 @@ int main(int argc, char *argv[])
                         	break;
 		}
         }
-        else if (fsmServer ==1)
+        else if (fsmServer ==2)
         {
                 int joueurId;
                 char motJoueur[256];
@@ -341,7 +341,7 @@ int main(int argc, char *argv[])
                         case 'A':
                                 {
                                         sscanf(buffer+2, "%d %d %d %s", &joueurId, &cibleJoueur[0], &cibleJoueur[1], motJoueur);
-                                        printf("On a reçu : \nID : %d\nCible : %d et %d\n motSecret : %d\n", joueurId, cibleJoueur[0], cibleJoueur[1], motJoueur); //TEST
+                                        printf("On a reçu : \nID : %d\nCible : %d et %d\n motSecret : %s\n", joueurId, cibleJoueur[0], cibleJoueur[1], motJoueur); //TEST
 
                                         if (tcpClients[joueurId].role == 1) //Dans le cas d'une réponse d'un espion :
                                         {
@@ -371,6 +371,7 @@ int main(int argc, char *argv[])
                                                         sendMessageToClient(tcpClients[i].ipAddress,
                                                         tcpClients[i].port,
                                                         reply);
+                                                        printf("\nOn a envoyé au client %d le message : %s\n", i, reply); //TEST
                                                 }
                                                 quit = 1; // Fermeture paisible du serveur
                                         }
