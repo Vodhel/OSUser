@@ -293,12 +293,7 @@ int main(int argc, char *argv[])
 
 					nbReponses++;
 					if(nbReponses==10)
-                                        {
                                                 fsmServer = 2;
-                                                return 1; // TEST
-                                        //alors 
-                                        //on passe à l'écran suivant
-                                        }
                                         else
                                         {
 
@@ -316,6 +311,11 @@ int main(int argc, char *argv[])
                         	break;
 		}
         }
+        else if (fsmServer ==1)
+        {
+                
+        }
+
      	close(newsockfd);
      }
      close(sockfd);

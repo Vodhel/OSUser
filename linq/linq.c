@@ -150,7 +150,7 @@ void manageEvent(SDL_Event event)
      				cptWord=0;
     			}
 
-				else if (car == 13)   //si touche entrée
+				else if ((car == 13) && (goEnabled == 1))   //si touche entrée
 				{
 					goEnabled =0;
                                         sprintf(sendBuffer, "P %s", word);
@@ -258,12 +258,7 @@ void manageNetwork()
                          gWords[2][0], gWords[2][1], 
                          gWords[3][0], gWords[3][1], 
                          gWords[4][0], gWords[4][1]);
-                printf("On a reçu la liste de mots suivantes : \n %s %s\n %s %s\n %s %s\n %s %s\n %s %s",
-                                 gWords[0][0], gWords[0][1], 
-                         gWords[1][0], gWords[1][1], 
-                         gWords[2][0], gWords[2][1], 
-                         gWords[3][0], gWords[3][1], 
-                         gWords[4][0], gWords[4][1]);//TEST
+                if (strcmp(gWords[4][1], "-") != 0) screenNumber = 3;
         break;
     }
 
