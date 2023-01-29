@@ -222,7 +222,8 @@ void manageNetwork()
      // Message 'I' : le joueur recoit son Id
      case 'I':
       sscanf(gbuffer+2,"%d",&gId);
-      screenNumber=ECRAN_3_CONTRE_ESPION;
+      printf("Le char pour I : %d\nL'Id obtenue : %d\n", *(gbuffer+2), gId);
+      screenNumber=1;
       break;
     }
     break;
@@ -231,24 +232,27 @@ void manageNetwork()
     {
      // Message 'L' : le joueur recoit les noms des joueurs connectés 
      case 'L':
-      sscanf(gbuffer+2,"%s %s %s %s %s",
-       gNames[0],
-       gNames[1],
-       gNames[2],
-       gNames[3],
-       gNames[4]);
+        sscanf(gbuffer+2,"%s %s %s %s %s",
+        gNames[0],
+        gNames[1],
+        gNames[2],
+        gNames[3],
+        gNames[4]);
+        break;
 
       // Message 'R' : le joueur reçoit les rôles. En théorie tous les joueurs sont connectés, mais on laisse un petit if au cas où.
       case 'R' :
         if (strcmp(gNames[4],"-")!=0)
         {
-                int temp_gRole[5] = {-1, -1, -1, -1, -1};
-                printf("Le return du scan f : %d\n",sscanf(gbuffer+2,"%d %d %d %d %d",&temp_gRole[0], &temp_gRole[1], &temp_gRole[2], &temp_gRole[3], &temp_gRole[4]));
-                gRole = temp_gRole[gId];
+                sscanf(gbuffer+(2*(gId+1)),"%d", &gRole);
+                //int temp_gRole[5] = {-1, -1, -1, -1, -1};
+                //printf("Le return du scan f : %d\n",sscanf(gbuffer,"R %d %d %d %d %d",&temp_gRole[0], &temp_gRole[1], &temp_gRole[2], &temp_gRole[3], &temp_gRole[4]));
+                //gRole = temp_gRole[gId];
+                //printf("Les temp roles : %d %d %d %d %d", temp_gRole[0], temp_gRole[1], temp_gRole[2], temp_gRole[3], temp_gRole[4]);
                 printf("ID : %d\nRole : %d\n",gId, gRole);
                 screenNumber=2; // Oui mais non, on changera d'écran uniquement une fois le rôle reçu !
         }
-      break;
+        break;
     }
    break;
   }

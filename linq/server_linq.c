@@ -109,7 +109,7 @@ void sendMessageToClient(char *clientip,int clientport,char *mess)
 void broadcastMessage(char *mess)
 {
         int i;
-
+        printf("%s\n", mess); // TEST
         for (i=0;i<nbClients;i++)
                 sendMessageToClient(tcpClients[i].ipAddress,
                         tcpClients[i].port,
@@ -128,14 +128,10 @@ void affecterRoles()
 void broadcastRoles() //j'ai pas compris les regles du jeu à 100% mais ici, et sauf erreur de ma part,
                                 // il faut envoyer le même message à tlm car la fonction s'appelle "broadcast" truc.
 {       
-        char buffer[256] = "R "; // R pour rôle !
-        char temp_str[256] = "";
-        for(int i = 0; i < nbClients; i++)
-        {
-                sprintf(temp_str, "%d ", tcpClients[i].role);
-                strcat(buffer,temp_str);
-        }
-        printf("broadcastRoles() message: %s", buffer); //TEST
+        char buffer[256]; // R pour rôle !
+        
+        sprintf(buffer, "R %d %d %d %d %d", tcpClients[0].role, tcpClients[1].role, tcpClients[2].role, tcpClients[3].role, tcpClients[4].role);
+
         broadcastMessage(buffer);
 }
 
