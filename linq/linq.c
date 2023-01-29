@@ -21,7 +21,7 @@ char gClientIpAddress[256];
 int gClientPort;
 char gName[256];
 char gNames[5][256];
-char gWords[5][2][256];
+char gWords[5][2][256] = {{"-","-"},{"-","-"},{"-","-"},{"-","-"},{"-","-"}};
 int gId;
 int gRole = -1;
 int goEnabled;
@@ -150,12 +150,11 @@ void manageEvent(SDL_Event event)
      				cptWord=0;
     			}
 
-				else if (car == 10)   //si touche entrée
+				else if (car == 13)   //si touche entrée
 				{
 					goEnabled =0;
-					//envoyerMotAuServeur(message);
-					//screenNumber = ecran suivant , s'il ne faut faire ça ailleurs
-					
+                                        sprintf(sendBuffer, "P %s", word);
+                                        sendMessageToServer(gServerIpAddress, gServerPort,sendBuffer);				
 				}
 
     			else if ((car>=97) && (car<=122)) 
@@ -412,8 +411,6 @@ void manageRedraw()
  }
  SDL_RenderPresent(renderer);
 }
-
-
 
 
 int main(int argc, char ** argv)
