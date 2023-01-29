@@ -295,6 +295,7 @@ int main(int argc, char *argv[])
 					if(nbReponses==10)
                                         {
                                                 fsmServer = 2;
+                                                return 1; // TEST
                                         //alors 
                                         //on passe à l'écran suivant
                                         }

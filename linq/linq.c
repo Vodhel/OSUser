@@ -10,6 +10,8 @@
 #include <netinet/in.h>
 #include <netdb.h>
 
+#define ECRAN_3_CONTRE_ESPION 3
+#define ECRAN_3_ESPION 4
 
 pthread_t thread_serveur_tcp_id;
 char gbuffer[256];
@@ -137,6 +139,7 @@ void manageEvent(SDL_Event event)
 	{
 		switch(screenNumber)
 		{
+
 			case 2:  //ecran avec textbox
 			{
 				int car=event.key.keysym.sym;
@@ -245,6 +248,7 @@ void manageNetwork()
         // Message 'T' : Le joueur reçoit un message pour signaler son tours de jeu
         case 'T':
          goEnabled = 1;
+         
         break;
 
         // Message 'M' : Le joueur reçoit la liste des mots de chaque joueurs.
@@ -255,8 +259,8 @@ void manageNetwork()
                          gWords[2][0], gWords[2][1], 
                          gWords[3][0], gWords[3][1], 
                          gWords[4][0], gWords[4][1]);
-                printf("On a reçu la liste de mots suivantes : \n %s %s\n %s %s\n %s %s\n %s %s\n",
-                         gWords[0][0], gWords[0][1], 
+                printf("On a reçu la liste de mots suivantes : \n %s %s\n %s %s\n %s %s\n %s %s\n %s %s",
+                                 gWords[0][0], gWords[0][1], 
                          gWords[1][0], gWords[1][1], 
                          gWords[2][0], gWords[2][1], 
                          gWords[3][0], gWords[3][1], 
@@ -398,51 +402,11 @@ void manageRedraw()
   case 3: //écran ou on tente de deviner les espions
   {
 
-		//on efface l'écran:
-	 	SDL_SetRenderDrawColor(renderer, 255, 230, 230, 230);
-        SDL_Rect rect = {0, 0, 1024, 768};
-        SDL_RenderFillRect(renderer, &rect);
-        
-		
-		//partie commune aux deux roles:
-        SDL_Rect ButtonBG0 = {150, 300, 175, 80};
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0,0);
-        SDL_RenderDrawRect(renderer, &ButtonBG0);
 
-        SDL_Rect ButtonBG1 = {350, 300, 175, 80};
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0,0);
-        SDL_RenderDrawRect(renderer, &ButtonBG1);
-
-        SDL_Rect ButtonBG2 = {550, 300, 175, 80};
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0,0);
-        SDL_RenderDrawRect(renderer, &ButtonBG2);
-
-        SDL_Rect ButtonBG3 = {750, 300, 175, 80};
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0,0);
-        SDL_RenderDrawRect(renderer, &ButtonBG3);
-
-        for(int i = 0; i < 5; i++)
-        {
-            int j = 1;
-            if (i != gId)
-            {
-                myRenderText(gNames[i],(150*(j)), 300);
-                j++;
-            }
-        }
-
-		//partie fonction du roule:
-        if(gRole == 1)
-        {
-			myRenderText("Qui est l'autre espion?",0,0);
-        }
-        if(gRole == 0)
-        {
-			myRenderText("Qui sont les deux espions?",0,0);
-        }
   } 
   break;
 
+  break;
   default:
    break;
  }
