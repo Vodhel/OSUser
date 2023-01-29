@@ -169,44 +169,63 @@ void sendMessageToServer(char *ipAddress, int portno, char *mess)
 
 void manageEvent(SDL_Event event)
 {
- switch (event.type)
- {
-  case SDL_QUIT:
-   quit = 1;
-   break;
-  case SDL_KEYDOWN:
-   {
-    int car=event.key.keysym.sym;
-    printf("%d\n",event.key.keysym.sym);
-    if (car==8)
+    switch (event.type)
     {
-     strcpy(word,"");
-     cptWord=0;
-    }
-    else if ((car>=97) && (car<=122)) 
-    {
-     word[cptWord++]=car;
-     word[cptWord]='\0';
-    }
-   }
-   break;
-  case  SDL_MOUSEBUTTONDOWN:
-   switch(screenNumber)
-   {
+    case SDL_QUIT:
+        quit = 1;
+    break;
+
+	case SDL_KEYDOWN:
+	{
+		switch(screenNumber)
+		{
+			case ECRAN_3_CONTRE_ESPION: //pas de break; entre deux case fait un OU logique
+			case ECRAN_3_ESPION:
+			{
+				int car=event.key.keysym.sym;
+    			printf("%d\n",event.key.keysym.sym);
+    			if (car==8)
+    			{
+     				strcpy(word,"");
+     				cptWord=0;
+    			}
+
+				else if (car == 10)   //si touche entrée
+				{
+					//envoyerMotAuServeur(message);
+					//screenNumber = ecran suivant , s'il ne faut faire ça ailleurs
+					
+				}
+
+    			else if ((car>=97) && (car<=122)) 
+    			{
+    				word[cptWord++]=car;
+    				word[cptWord]='\0';
+    			}
+			}
+			break;
+
+			default:
+			break;
+		}
+	}
+	break;
+
+  	case  SDL_MOUSEBUTTONDOWN:
+   	switch(screenNumber)
+   	{
     case 0:
-     SDL_GetMouseState( &mx, &my );
-     if ((mx<200) && (my<50) && (connectEnabled==1))
-     {
-      sprintf(sendBuffer,"C %s %d %s",
-	gClientIpAddress,gClientPort,gName);
-      sendMessageToServer(gServerIpAddress,
-	gServerPort,sendBuffer);
-      connectEnabled=0;
-     }
+     	SDL_GetMouseState( &mx, &my );
+     	if ((mx<200) && (my<50) && (connectEnabled==1))
+     	{
+      		sprintf(sendBuffer,"C %s %d %s", gClientIpAddress,gClientPort,gName);
+      		sendMessageToServer(gServerIpAddress, gServerPort,sendBuffer);
+      		connectEnabled=0;
+     	}
     default:
-     break;
-   }
- }
+    	break;
+	}
+	}
 }
 
 void manageNetwork()
@@ -222,7 +241,6 @@ void manageNetwork()
      // Message 'I' : le joueur recoit son Id
      case 'I':
       sscanf(gbuffer+2,"%d",&gId);
-      printf("Le char pour I : %d\nL'Id obtenue : %d\n", *(gbuffer+2), gId);
       screenNumber=1;
       break;
     }
