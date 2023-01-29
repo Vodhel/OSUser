@@ -290,6 +290,7 @@ void myRenderText(char *m,int x,int y)
 
 void manageRedraw()
 {
+
  switch (screenNumber)
  {
   case 0: //connect
@@ -324,24 +325,22 @@ void manageRedraw()
    }
    break;
 
-//On pourrait remplacer les ecrans a deux version par un if(espion) stratigiquement placé mais pour l'instant je vais laisser comme ça
-
   case 2:  
   {
         SDL_SetRenderDrawColor(renderer, 255, 230, 230, 230);
         SDL_Rect rect = {0, 0, 1024, 768};
         SDL_RenderFillRect(renderer, &rect);
 
-        myRenderText(gNames[0],400,400);
+        myRenderText(gNames[0],50,200);
         myRenderText(gNames[1],250,200);
-        myRenderText(gNames[2],500,80);
-        myRenderText(gNames[3],750,200);
-        myRenderText(gNames[4],700,400);
+        myRenderText(gNames[2],450,200);
+        myRenderText(gNames[3],650,200);
+        myRenderText(gNames[4],850,200);
         if(gRole == 1) //faut ajouter l'affichage du mot secret ici
         {
             myRenderText("Role: espion", 0, 0);
-			myRenderText("Mot secret: ", 800, 0);
-			myRenderText(secretWord, 850, 0);
+			myRenderText("Mot secret: ", 400, 0);
+			myRenderText(secretWord, 720, 0);
         }
         if(gRole == 0)
         {
