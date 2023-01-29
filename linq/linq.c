@@ -46,6 +46,10 @@ TTF_Font* Sans;
 
 volatile int synchro;
 
+int flagBoutonsVote[4] = {0, 0, 0, 0}; //indique l'état des quatre boutons de "vote": appuyé ou pas 
+int choix[2] = {-1, -1};  //choix actuels du joueur avant validation et envoi
+int flagChoixFait = 0;  //on envoit la reponse du joueur au serveur quand ce flag est levé 
+
 void *fn_serveur_tcp(void *arg)
 {
         int sockfd, newsockfd, portno;
@@ -142,7 +146,6 @@ void manageEvent(SDL_Event event)
 	{
 		switch(screenNumber)
 		{
-
 			case 2:  //ecran avec textbox
 			{
 
@@ -159,8 +162,8 @@ void manageEvent(SDL_Event event)
 					else if (car == 13)   //si touche entrée
 					{
 						goEnabled =0;
-                	                        sprintf(sendBuffer, "P %s", word);
-                	                        sendMessageToServer(gServerIpAddress, gServerPort,sendBuffer);				
+                	    sprintf(sendBuffer, "P %s", word);
+                	    sendMessageToServer(gServerIpAddress, gServerPort,sendBuffer);				
 					}
 
     				else if ((car>=97) && (car<=122)) 
@@ -182,16 +185,84 @@ void manageEvent(SDL_Event event)
    	switch(screenNumber)
    	{
     case 0:
+	{
      	SDL_GetMouseState( &mx, &my );
      	if ((mx<200) && (my<50) && (connectEnabled==1))
      	{
       		sprintf(sendBuffer,"C %s %d %s", gClientIpAddress,gClientPort,gName);
       		sendMessageToServer(gServerIpAddress, gServerPort,sendBuffer);
       		connectEnabled=0;
-     	}
+     	} 
+	}
+	break;
+
+	case 3: //phase de "vote"
+	{
+
+		//petit tableau temp pour stocker les noms des autres joueurs sans le notre
+		char nomsAutresJoueurs[4][256];
+		int j = 0;
+		for (int i = 0; i < 5; i++)
+		{
+			if(i!=gId)
+			{
+				strcpy(nomsAutresJoueurs[j],gNames[i]);
+	    		j++; 
+	    	}
+	    }
+
+	    SDL_GetMouseState( &mx, &my );
+		if(choix[0] == -1 || choix[1] == -1)
+        {
+     	    if ((15<mx)&&(mx<(15+240)) && (300<my)&&(my<(300+80))) // rectangle de 240x80 situé à (15, 300) {15, 300, 240, 80}
+		    {
+		    	flagBoutonsVote[0] = 1; //on leve le flag du premier bouton
+
+		    	if (choix[0] == -1) { choix[0] = 0; }
+		    	else if (choix[1] == -1) { choix[1] = 0; }
+		    }
+
+     	    if ((265<mx)&&(mx<(265+240)) && (300<my)&&(my<(300+80))) // rectangle de 240x80 situé à (265, 300) {265, 300, 240, 80};
+		    {
+		    	flagBoutonsVote[1] = 1;
+
+		    	if (choix[0] == -1) { choix[0] = 1; }
+		    	else if (choix[1] == -1) { choix[1] = 1; }
+		    }
+
+		    if ((515<mx)&&(mx<(515+240)) && (300<my)&&(my<(300+80))) //{515, 300, 240, 80}
+		    {
+		    	flagBoutonsVote[2] = 1; 
+
+		    	if (choix[0] == -1) { choix[0] = 2; }
+		    	else if (choix[1] == -1) { choix[1] = 2; }
+		    }
+
+		    if ((765<mx)&&(mx<(765+240)) && (300<my)&&(my<(300+80)))
+		    {
+		    	flagBoutonsVote[3] = 1; 
+
+		    	if (choix[0] == -1) { choix[0] = 3; }
+		    	else if (choix[1] == -1) { choix[1] = 3; }
+		    }
+		}
+
+        else
+        {
+            if((765<mx)&&(mx<(765+240)) && (420<my)&&(my<(420+80)))// {765, 420, 240, 80}
+            {
+                flagChoixFait = 1;
+                exit(1); //DEBUG 
+            }
+        }
+
+	}
+	break;
+
     default:
     	break;
 	}
+
 	}
 }
 
@@ -396,22 +467,43 @@ void manageRedraw()
     SDL_RenderFillRect(renderer, &rect);
 
 
-	//partie commune aux deux roles:
+	//partie commune aux deux roles:(
+
     SDL_Rect ButtonBG0 = {15, 300, 240, 80};
     SDL_SetRenderDrawColor(renderer, 0, 0, 0,0);
     SDL_RenderDrawRect(renderer, &ButtonBG0);
+    if(flagBoutonsVote[0] == 1)  //si le joueur a appuyé sur ce bouton, on le remplit avec du vert
+    {
+        SDL_SetRenderDrawColor(renderer, 1, 50, 32, 100);
+        SDL_RenderFillRect(renderer, &ButtonBG0);
+    }
 
     SDL_Rect ButtonBG1 = {265, 300, 240, 80};
     SDL_SetRenderDrawColor(renderer, 0, 0, 0,0);
     SDL_RenderDrawRect(renderer, &ButtonBG1);
+    if(flagBoutonsVote[1] == 1)
+    {
+        SDL_SetRenderDrawColor(renderer, 1, 50, 32, 100);
+        SDL_RenderFillRect(renderer, &ButtonBG1);
+    }
 
     SDL_Rect ButtonBG2 = {515, 300, 240, 80};
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0,0);
     SDL_RenderDrawRect(renderer, &ButtonBG2);
+    if(flagBoutonsVote[2] == 1)
+    {
+        SDL_SetRenderDrawColor(renderer, 1, 50, 32, 100);
+        SDL_RenderFillRect(renderer, &ButtonBG2);
+    }
 
     SDL_Rect ButtonBG3 = {765, 300, 240, 80};
     SDL_SetRenderDrawColor(renderer, 0, 0, 0,0);
     SDL_RenderDrawRect(renderer, &ButtonBG3);
+    if(flagBoutonsVote[3] == 1)
+    {
+        SDL_SetRenderDrawColor(renderer, 1, 50, 32, 100);
+        SDL_RenderFillRect(renderer, &ButtonBG3);
+    }
 
     int j = 0;
     for(int i = 0; i < 5; i++)
@@ -422,7 +514,12 @@ void manageRedraw()
             j++;
         }
     }
-	gRole = 1;
+
+    SDL_Rect boutonValider = {765, 420, 240, 80};
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0,0);
+    SDL_RenderDrawRect(renderer, &boutonValider);
+	myRenderText("Valider", 770, 420);
+
 	//partie en fonction du role:
     if(gRole == 1)
     {
@@ -430,7 +527,7 @@ void manageRedraw()
 		char temp_str[500];
 		strcpy(temp_str,"Rappel: le mot secret est:");
 		strcat(temp_str, secretWord);
-		myRenderText(temp_str, 70, 450);
+		myRenderText(temp_str, 70, 500);
     }
     if(gRole == 0)
     {
