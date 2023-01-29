@@ -305,7 +305,6 @@ void myRenderText(char *m,int x,int y)
 
 void manageRedraw()
 {
-
  switch (screenNumber)
  {
   case 0: //connect
@@ -423,11 +422,15 @@ void manageRedraw()
             j++;
         }
     }
-
+	gRole = 1;
 	//partie en fonction du role:
     if(gRole == 1)
     {
 		myRenderText("Qui est l'autre espion?",0,0);
+		char temp_str[500];
+		strcpy(temp_str,"Rappel: le mot secret est:");
+		strcat(temp_str, secretWord);
+		myRenderText(temp_str, 70, 450);
     }
     if(gRole == 0)
     {
@@ -448,7 +451,7 @@ void manageRedraw()
 
 int main(int argc, char ** argv)
 {
-	
+
  int ret;
 
  if (argc<6)
