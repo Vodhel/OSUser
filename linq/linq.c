@@ -21,6 +21,7 @@ char gClientIpAddress[256];
 int gClientPort;
 char gName[256];
 char gNames[5][256];
+char gWords[5][2][256];
 int gId;
 int gRole = -1;
 int goEnabled;
@@ -240,6 +241,30 @@ void manageNetwork()
    break;
 
    case 2:
+    int tours;
+    switch(gbuffer[0])
+    {
+        // Message 'T' : Le joueur reçoit un message pour signaler son tours de jeu
+        case 'T':
+         goEnabled = 1;
+        break;
+
+        // Message 'M' : Le joueur reçoit la liste des mots de chaque joueurs.
+        case 'M' :
+                sscanf(gbuffer+2,"%s %s %s %s %s %s %s %s %s %s",
+                         gWords[0][0], gWords[0][1], 
+                         gWords[1][0], gWords[1][1], 
+                         gWords[2][0], gWords[2][1], 
+                         gWords[3][0], gWords[3][1], 
+                         gWords[4][0], gWords[4][1]);
+                printf("On a reçu la liste de mots suivantes : \n %s %s\n %s %s\n %s %s\n %s %s\n",
+                         gWords[0][0], gWords[0][1], 
+                         gWords[1][0], gWords[1][1], 
+                         gWords[2][0], gWords[2][1], 
+                         gWords[3][0], gWords[3][1], 
+                         gWords[4][0], gWords[4][1]);//TEST
+        break;
+    }
 
   }
   synchro=0;

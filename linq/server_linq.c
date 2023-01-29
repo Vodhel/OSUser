@@ -181,8 +181,8 @@ int main(int argc, char *argv[])
         	strcpy(tcpClients[i].ipAddress,"localhost");
         	tcpClients[i].port=-1;
         	strcpy(tcpClients[i].name,"-");
-        	strcpy(tcpClients[i].words[0],"Null");
-        	strcpy(tcpClients[i].words[1],"Null");
+        	strcpy(tcpClients[i].words[0],"-");
+        	strcpy(tcpClients[i].words[1],"-");
 	}
 
      while (1)
@@ -247,8 +247,8 @@ int main(int argc, char *argv[])
 					affecterRoles();
 					broadcastRoles();
 
-					char *word = mpts[rand()%10];           //tirer un mot au hasard, penser à changer le 10 si on ajoute/enlève des mots
-                                        sprintf(reply, "W %s", word);
+					char *secretWord = mpts[rand()%10];           //tirer un mot au hasard, penser à changer le 10 si on ajoute/enlève des mots
+                                        sprintf(reply, "W %s", secretWord);
                                         for(int i=0; i<5; ++i)                  //pour les espions, envoyer le mot
                                         {
                                                 if (tcpClients[i].role == 1)    // if(tcpClients[i].role) suffirait mais c'est plus lisible ainsi
@@ -260,9 +260,16 @@ int main(int argc, char *argv[])
                                         }
 					joueurCourant=0;
 					nbReponses=0;
+                                        sprintf(reply, "T");
+                                        sendMessageToClient(tcpClients[joueurCourant].ipAddress,
+                                                        tcpClients[joueurCourant].port,
+                                                        reply);
 					
 				}
 				break;
+
+                        default:
+                                break;
                 }
 	}
 	else if (fsmServer==1)
@@ -271,14 +278,39 @@ int main(int argc, char *argv[])
 		{
                 	case 'P':
 				{
-					/*
-					"P joueur mot" 
+					if (strcmp(tcpClients[joueurCourant].words[0], "-") == 0)
+					   sscanf(buffer+2, "%s", tcpClients[joueurCourant].words[0]);
+                                        else
+                                           sscanf(buffer+2, "%s", tcpClients[joueurCourant].words[1]);
+
+                                        sprintf(reply,"M %s %s %s %s %s %s %s %s %s %s",
+                                                 tcpClients[0].words[0], tcpClients[0].words[1], 
+                                                 tcpClients[1].words[0], tcpClients[1].words[1], 
+                                                 tcpClients[2].words[0], tcpClients[2].words[1], 
+                                                 tcpClients[3].words[0], tcpClients[3].words[1], 
+                                                 tcpClients[4].words[0], tcpClients[4].words[1]);
+                                        broadcastMessage(reply);
+
 					nbReponses++;
-					if nbReponses==10
-					alors
-						on passe à l'écran suivant
-					*/
+					if(nbReponses==10)
+                                        {
+                                                fsmServer = 2;
+                                        //alors 
+                                        //on passe à l'écran suivant
+                                        }
+                                        else
+                                        {
+
+
+                                                joueurCourant = (joueurCourant+1)%5;
+                                                sprintf(reply, "T");
+                                                sendMessageToClient(tcpClients[joueurCourant].ipAddress,
+                                                        tcpClients[joueurCourant].port,
+                                                        reply);
+                                        }
+                                break;
 				}
+
                 	default:
                         	break;
 		}
