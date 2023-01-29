@@ -37,6 +37,7 @@ char sendBuffer[256];
 SDL_Window * window;
 SDL_Renderer *renderer;
 
+
 SDL_Surface *connectbutton;
 SDL_Texture *texture_connectbutton;
 TTF_Font* Sans; 
@@ -423,12 +424,14 @@ void manageRedraw()
     {
 		myRenderText("Qui sont les deux espions?",0,0);
     }
-
-
   } 
   break;
 
-  break;
+	case 4:
+	{
+		
+	}
+
   default:
    break;
  }
