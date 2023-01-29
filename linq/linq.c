@@ -37,7 +37,6 @@ char sendBuffer[256];
 SDL_Window * window;
 SDL_Renderer *renderer;
 
-
 SDL_Surface *connectbutton;
 SDL_Texture *texture_connectbutton;
 TTF_Font* Sans; 
@@ -266,6 +265,16 @@ void manageNetwork()
                 if (strcmp(gWords[4][1], "-") != 0) screenNumber = 3;
         break;
     }
+    break;
+
+    case 3:
+        switch(gbuffer[0])
+        {
+                // Message 'S' : Réception du score et des bonnes réponses.
+                case 'S' : 
+                        sscanf(gbuffer+2, "%d %d %s %d", &idEspion[0], &idEspion[1], &secretWord, &score);
+        }
+    break;
 
   }
   synchro=0;
