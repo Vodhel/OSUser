@@ -180,7 +180,7 @@ void manageEvent(SDL_Event event)
 			}
 			break;
 
-            case 3:  //ecran saisi du mot secret (pour les contre espions en tout cas)
+             case 3:  //ecran saisi du mot secret (pour les contre espions en tout cas)
             {
                 if(gRole == 0) //si contre espion
                 {
@@ -402,7 +402,7 @@ void manageNetwork()
                          gWords[2][0], gWords[2][1], 
                          gWords[3][0], gWords[3][1], 
                          gWords[4][0], gWords[4][1]);
-                if (strcmp(gWords[4][1], "-") != 0) screenNumber = 3;
+                if (strcmp(gWords[4][1], "-") != 0) {screenNumber = 3; strcpy(word,"");}
         break;
     }
     break;
