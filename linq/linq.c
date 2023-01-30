@@ -181,6 +181,35 @@ void manageEvent(SDL_Event event)
 
 			default:
 			break;
+
+            case 4:  //ecran saisi du mot secret (pour les contre espions en tout cas)
+            {
+                if(gRole == 0) //si contre espion
+                {
+                 	int car=event.key.keysym.sym;
+    				printf("%d\n",event.key.keysym.sym);
+    				if (car==8)
+    				{
+     					strcpy(word,"");
+     					cptWord=0;
+    				}
+
+					else if (car == 13)   //si touche entrée
+					{
+						goEnabled =0;
+                	    //sprintf(sendBuffer, "P %s", word);
+                	    //sendMessageToServer(gServerIpAddress, gServerPort,sendBuffer);		
+                        //traitement reseaux ici		
+					}
+
+    				else if ((car>=97) && (car<=122)) 
+    				{
+    					word[cptWord++]=car;
+    					word[cptWord]='\0';
+    				}   
+                }
+            }
+            break;
 		}
 	}
 	break;
@@ -234,7 +263,7 @@ void manageEvent(SDL_Event event)
 
         if ((265<mx)&&(mx<(265+240)) && (300<my)&&(my<(300+80))) // rectangle de 240x80 situé à (265, 300) {265, 300, 240, 80};
         {
-                printf("Clic bouton 1\n"); //TEST
+            printf("Clic bouton 1\n"); //TEST
             if((flagBoutonAppuye[1] == 0) && ((choix[0] == -1) || (choix[1] == -1)))
             {
                 flagBoutonAppuye[1] = 1;
@@ -561,17 +590,28 @@ void manageRedraw()
 	myRenderText("Valider", 770, 420);
 
 	//partie en fonction du role:
-    if(gRole == 1)
+    if(gRole == 0)
     {
 		myRenderText("Qui est l'autre espion?",0,0);
 		char temp_str[500];
 		strcpy(temp_str,"Rappel: le mot secret est:");
 		strcat(temp_str, secretWord);
 		myRenderText(temp_str, 70, 500);
+
     }
-    if(gRole == 0)
+    if(gRole == 1)
     {
 		myRenderText("Qui sont les deux espions?",0,0);
+
+        //zone de texte pour saisir le mot secret:
+        SDL_Rect textBoxBG = {450, 560, 330, 60};
+    	SDL_SetRenderDrawColor(renderer, 0, 0, 0,0);
+    	SDL_RenderDrawRect(renderer, &textBoxBG);
+    	myRenderText("Mot: ", 320, 545);
+    	if (cptWord>0)
+    	{
+    	    myRenderText(word, 450, 550);
+    	}
     }
 
         // // DEBUT TEST ZONE
