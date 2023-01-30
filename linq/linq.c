@@ -195,7 +195,6 @@ void manageEvent(SDL_Event event)
 					else if (car == 13)   //si touche entrée
 					{
 						goEnabled =0;
-                        screenNumber = 4;
                 	    //sprintf(sendBuffer, "P %s", word);
                 	    //sendMessageToServer(gServerIpAddress, gServerPort,sendBuffer);		
                         //traitement reseaux ici		
@@ -402,7 +401,7 @@ void manageNetwork()
                          gWords[2][0], gWords[2][1], 
                          gWords[3][0], gWords[3][1], 
                          gWords[4][0], gWords[4][1]);
-                if (strcmp(gWords[4][1], "-") != 0) {screenNumber = 3; strcpy(word,"");}
+                if (strcmp(gWords[4][1], "-") != 0) {screenNumber = 3; strcpy(word,"-");}
         break;
     }
     break;
