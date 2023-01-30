@@ -111,7 +111,7 @@ void sendMessageToServer(char *ipAddress, int portno, char *mess)
     int sockfd, n;
     struct sockaddr_in serv_addr;
     struct hostent *server;
-    char sendbuffer[256];
+    char sendbuffer[256]; // Pourquoi Monsieur ?! Y'a un sendBuffer[256] global et à cause de ce deuxième LOCAL mon éditeur me fait faire une erreur à chaque fois que je veux utiliser le buffer global !
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -200,10 +200,10 @@ void manageEvent(SDL_Event event)
 	}
 	break;
 
-	case 3: //phase de "vote"
+    case 3: //phase de "vote"
 	{
 		//petit tableau temp pour stocker les noms des autres joueurs sans le notre, probablement à sortir de cette fonc
-		char nomsAutresJoueurs[4][256];
+		char nomsAutresJoueurs[4][256]; // Je crois qu'il sert à rien ce truc mdr
 		int j = 0;
 		for (int i = 0; i < 5; i++)
 		{
@@ -217,14 +217,15 @@ void manageEvent(SDL_Event event)
 	    SDL_GetMouseState( &mx, &my );
         if ((15<mx)&&(mx<(15+240)) && (300<my)&&(my<(300+80))) // rectangle de 240x80 situé à (15, 300) {15, 300, 240, 80}
         {
-            if(flagBoutonAppuye[0] == 0)
+                printf("Clic bouton 0\n"); //TEST
+            if((flagBoutonAppuye[0] == 0) && ((choix[0] == -1) || (choix[1] == -1)))
             {
                 flagBoutonAppuye[0] = 1; //on leve le flag du premier bouton
-
+                printf("Flag levé et l'état de choix est : %d %d\n", choix[0], choix[1]); //TEST
                 if (choix[0] == -1) { choix[0] = 0; numeroDuChoix[0] = 0;}
                 else if (choix[1] == -1) { choix[1] = 0; numeroDuChoix[0] = 1;}
             }
-            else
+            else if (flagBoutonAppuye[0] == 1)
             {
                 choix[numeroDuChoix[0]] = -1;
                 flagBoutonAppuye[0] = 0;
@@ -233,14 +234,16 @@ void manageEvent(SDL_Event event)
 
         if ((265<mx)&&(mx<(265+240)) && (300<my)&&(my<(300+80))) // rectangle de 240x80 situé à (265, 300) {265, 300, 240, 80};
         {
-            if(flagBoutonAppuye[1] == 0)
+                printf("Clic bouton 1\n"); //TEST
+            if((flagBoutonAppuye[1] == 0) && ((choix[0] == -1) || (choix[1] == -1)))
             {
                 flagBoutonAppuye[1] = 1;
 
+                printf("Flag levé et l'état de choix est : %d %d\n", choix[0], choix[1]); //TEST
                 if (choix[0] == -1) { choix[0] = 1; numeroDuChoix[1] = 0; }
                 else if (choix[1] == -1) { choix[1] = 1; numeroDuChoix[1] = 1; }
             }
-            else
+            else if (flagBoutonAppuye[1] == 1)
             {
                 choix[numeroDuChoix[1]] = -1;
                 flagBoutonAppuye[1] = 0;
@@ -249,14 +252,16 @@ void manageEvent(SDL_Event event)
 
         if ((515<mx)&&(mx<(515+240)) && (300<my)&&(my<(300+80))) //{515, 300, 240, 80}
         {
-            if(flagBoutonAppuye[2] == 0)
+                printf("Clic bouton 2\n"); //TEST
+            if((flagBoutonAppuye[2] == 0) && ((choix[0] == -1) || (choix[1] == -1)))
             {
                 flagBoutonAppuye[2] = 1; 
+                printf("Flag levé et l'état de choix est : %d %d\n", choix[0], choix[1]); //TEST
 
                 if (choix[0] == -1) { choix[0] = 2; numeroDuChoix[2] = 0;}
                 else if (choix[1] == -1) { choix[1] = 2; numeroDuChoix[2] = 1;}
             }
-            else
+            else if (flagBoutonAppuye[2] == 1)
             {
                 choix[numeroDuChoix[2]] = -1;
                 flagBoutonAppuye[2] = 0;
@@ -265,14 +270,16 @@ void manageEvent(SDL_Event event)
 
         if ((765<mx)&&(mx<(765+240)) && (300<my)&&(my<(300+80)))
         {
-            if(flagBoutonAppuye[3] == 0)
+                printf("Clic bouton 3\n"); //TEST
+            if((flagBoutonAppuye[3] == 0) && ((choix[0] == -1) || (choix[1] == -1)))
             {
                 flagBoutonAppuye[3] = 1; 
+                printf("Flag levé et l'état de choix est : %d %d\n", choix[0], choix[1]); //TEST
 
                 if (choix[0] == -1) { choix[0] = 3; numeroDuChoix[3] = 0;}
                 else if (choix[1] == -1) { choix[1] = 3; numeroDuChoix[3] = 1;}
             }
-            else
+            else if (flagBoutonAppuye[3] == 1)
             {
                 choix[numeroDuChoix[3]] = -1;
                 flagBoutonAppuye[3] = 0;
@@ -281,10 +288,11 @@ void manageEvent(SDL_Event event)
 
         if((765<mx)&&(mx<(765+240)) && (420<my)&&(my<(420+80)))// {765, 420, 240, 80}
         {
-            if(choix[0] != -1 && choix[1] != -1)
+            if((choix[0] != -1 && choix[1] != -1) && (flagChoixFait == 0)) // En fait ce flag est vital, sinon le client peut potentiellemnt spam le serveur et ça, c'est mal !
             {
-                flagChoixFait = 1;
-                //envoyerLesChoixAuServeur();
+                flagChoixFait = 1; // Je pense c'est plutôt un passage à l'écran final qu'il faudrait faire ici, ou alors on fait ça lors de la récepion de la réponse du serveur
+                sprintf(sendBuffer, "A %d %d %d %s", gId, choix[0], choix[1], "-"); // L'implémentation pour le mot final est pas encore faite èwé
+                sendMessageToServer(gServerIpAddress, gServerPort,sendBuffer);
             }
         }
 	}
@@ -342,6 +350,7 @@ void manageNetwork()
       // Message 'W' : Le joueur est un espion et reçoit alors le mot secret
       case 'W' :
         sscanf(gbuffer+2, "%s", &secretWord);
+        choix[1] = -2; // On bloque ainsi la 2nd case du choix pour l'écran final, s'assurant qu'il ne puisse voter que pour une personne car il est le 2nd espion
         screenNumber=2; // On change d'écrans ssi : non-espion | (espion & on a le mot)
         break;
     }
@@ -377,7 +386,7 @@ void manageNetwork()
                 case 'S' : 
                         sscanf(gbuffer+2, "%d %d %s %d", &idEspion[0], &idEspion[1], &secretWord, &score);
                         printf("Données reçu : %d %d %s %d\n", idEspion[0], idEspion[1], secretWord, score); //TEST
-                        flagFin = 1; // TEST
+                        //flagFin = 1; // TEST
         }
     break;
 
@@ -565,15 +574,15 @@ void manageRedraw()
 		myRenderText("Qui sont les deux espions?",0,0);
     }
 
-        // DEBUT TEST ZONE
-        if(testFlag == 1)
-        {
-                sprintf(sendBuffer, "A %d 0 1 boulet", gId);
-                sendMessageToServer(gServerIpAddress, gServerPort,sendBuffer);
-                printf("\nMessage envoyé : %s\n", sendBuffer);
-                testFlag = 0;
-        }
-        // FIN TEST ZONE
+        // // DEBUT TEST ZONE
+        // if(testFlag == 1)
+        // {
+        //         sprintf(sendBuffer, "A %d 0 1 boulet", gId);
+        //         sendMessageToServer(gServerIpAddress, gServerPort,sendBuffer);
+        //         printf("\nMessage envoyé : %s\n", sendBuffer);
+        //         testFlag = 0;
+        // }
+        // // FIN TEST ZONE
   } 
   break;
 
@@ -640,7 +649,6 @@ while (!quit)
   manageEvent(event);
  manageNetwork();
  manageRedraw();
- if (flagFin) return 0; // TEST
 }
  
  SDL_DestroyRenderer(renderer);
