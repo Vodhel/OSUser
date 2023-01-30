@@ -414,7 +414,7 @@ void manageNetwork()
                 case 'S' : 
                         sscanf(gbuffer+2, "%d %d %s %d", &idEspion[0], &idEspion[1], &secretWord, &score);
                         printf("Données reçu : %d %d %s %d\n", idEspion[0], idEspion[1], secretWord, score); //TEST
-                        //flagFin = 1; // TEST
+                        screenNumber = 4;
         }
     break;
 
