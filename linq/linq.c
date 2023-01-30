@@ -9,6 +9,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include<unistd.h> //pour la fonction sleep()
 
 #define ECRAN_3_CONTRE_ESPION 3
 #define ECRAN_3_ESPION 4
@@ -179,10 +180,7 @@ void manageEvent(SDL_Event event)
 			}
 			break;
 
-			default:
-			break;
-
-            case 4:  //ecran saisi du mot secret (pour les contre espions en tout cas)
+            case 3:  //ecran saisi du mot secret (pour les contre espions en tout cas)
             {
                 if(gRole == 0) //si contre espion
                 {
@@ -197,6 +195,7 @@ void manageEvent(SDL_Event event)
 					else if (car == 13)   //si touche entrée
 					{
 						goEnabled =0;
+                        screenNumber = 4;
                 	    //sprintf(sendBuffer, "P %s", word);
                 	    //sendMessageToServer(gServerIpAddress, gServerPort,sendBuffer);		
                         //traitement reseaux ici		
@@ -590,7 +589,7 @@ void manageRedraw()
 	myRenderText("Valider", 770, 420);
 
 	//partie en fonction du role:
-    if(gRole == 0)
+    if(gRole == 1)
     {
 		myRenderText("Qui est l'autre espion?",0,0);
 		char temp_str[500];
@@ -599,7 +598,7 @@ void manageRedraw()
 		myRenderText(temp_str, 70, 500);
 
     }
-    if(gRole == 1)
+    if(gRole == 0)
     {
 		myRenderText("Qui sont les deux espions?",0,0);
 
@@ -626,7 +625,16 @@ void manageRedraw()
   } 
   break;
 
+  case 4: //ecran de fin
+  {
+    char temp_buff[256];
+    sprintf(temp_buff, "Fin de la partie. Votre score est %d. Vous êtes nul.", score);
+    myRenderText(temp_buff, 500, 250);
+    sleep(5);
+    exit(1);
+  }
   break;
+
   default:
    break;
  }
