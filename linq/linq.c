@@ -166,9 +166,11 @@ void manageEvent(SDL_Event event)
 
 					else if (car == 13)   //si touche entrée
 					{
-						goEnabled =0;
-                	    sprintf(sendBuffer, "P %s", word);
-                	    sendMessageToServer(gServerIpAddress, gServerPort,sendBuffer);				
+                                                goEnabled =0;
+                                                sprintf(sendBuffer, "P %s", word);
+                                                sendMessageToServer(gServerIpAddress, gServerPort,sendBuffer);
+                                                strcpy(word,""); 
+                                                cptWord = 0;			
 					}
 
     				else if ((car>=97) && (car<=122)) 
@@ -180,7 +182,7 @@ void manageEvent(SDL_Event event)
 			}
 			break;
 
-             case 3:  //ecran saisi du mot secret (pour les contre espions en tout cas)
+             case 3:  //ecran saisi du mot secret pour les contre-espions
             {
                 if(gRole == 0) //si contre espion
                 {
@@ -191,19 +193,17 @@ void manageEvent(SDL_Event event)
      					strcpy(word,"");
      					cptWord=0;
     				}
-
-					else if (car == 13)   //si touche entrée
-					{
-						goEnabled =0;
-                	    //sprintf(sendBuffer, "P %s", word);
-                	    //sendMessageToServer(gServerIpAddress, gServerPort,sendBuffer);		
-                        //traitement reseaux ici		
-					}
-
+				else if (((car == 13) && (flagChoixFait == 0)) && ((choix[0] != -1) && (choix[1] != -1)))  //si touche entrée
+				{
+                                        flagChoixFait = 1;
+                                        if (cptWord == 0) strcpy(word, "-");
+                                        sprintf(sendBuffer, "A %d %d %d %s", gId, choix[0], choix[1], word);
+                                        sendMessageToServer(gServerIpAddress, gServerPort,sendBuffer);		
+				}
     				else if ((car>=97) && (car<=122)) 
     				{
-    					word[cptWord++]=car;
-    					word[cptWord]='\0';
+                                        word[cptWord++]=car;
+                                        word[cptWord]='\0';
     				}   
                 }
             }
@@ -318,7 +318,8 @@ void manageEvent(SDL_Event event)
             if((choix[0] != -1 && choix[1] != -1) && (flagChoixFait == 0)) // En fait ce flag est vital, sinon le client peut potentiellemnt spam le serveur et ça, c'est mal !
             {
                 flagChoixFait = 1; // Je pense c'est plutôt un passage à l'écran final qu'il faudrait faire ici, ou alors on fait ça lors de la récepion de la réponse du serveur
-                sprintf(sendBuffer, "A %d %d %d %s", gId, choix[0], choix[1], "-"); // L'implémentation pour le mot final est pas encore faite èwé
+                if (cptWord == 0) strcpy(word, "-");
+                sprintf(sendBuffer, "A %d %d %d %s", gId, choix[0], choix[1], word);
                 sendMessageToServer(gServerIpAddress, gServerPort,sendBuffer);
             }
         }
@@ -401,7 +402,7 @@ void manageNetwork()
                          gWords[2][0], gWords[2][1], 
                          gWords[3][0], gWords[3][1], 
                          gWords[4][0], gWords[4][1]);
-                if (strcmp(gWords[4][1], "-") != 0) {screenNumber = 3; strcpy(word,"-");}
+                if (strcmp(gWords[4][1], "-") != 0) {screenNumber = 3;}
         break;
     }
     break;
@@ -602,9 +603,9 @@ void manageRedraw()
 		myRenderText("Qui sont les deux espions?",0,0);
 
         //zone de texte pour saisir le mot secret:
-        SDL_Rect textBoxBG = {450, 560, 330, 60};
+        SDL_Rect textBoxBGBis = {450, 560, 330, 60};
     	SDL_SetRenderDrawColor(renderer, 0, 0, 0,0);
-    	SDL_RenderDrawRect(renderer, &textBoxBG);
+    	SDL_RenderDrawRect(renderer, &textBoxBGBis);
     	myRenderText("Mot: ", 320, 545);
     	if (cptWord>0)
     	{
@@ -626,9 +627,16 @@ void manageRedraw()
 
   case 4: //ecran de fin
   {
+        //on efface l'écran:
+        SDL_SetRenderDrawColor(renderer, 255, 230, 230, 230);
+        SDL_Rect rect = {0, 0, 1024, 768};
+        SDL_RenderFillRect(renderer, &rect);
+
+
     char temp_buff[256];
-    sprintf(temp_buff, "Fin de la partie. Votre score est %d. Vous êtes nul.", score);
-    myRenderText(temp_buff, 500, 250);
+    sprintf(temp_buff, "Fin de la partie. Votre score est %d.\n Les espions étaient %s et %s et le mot secret était %s", score, gNames[idEspion[0]], gNames[idEspion[1]], secretWord);
+    myRenderText(temp_buff, 10, 250);
+    SDL_RenderPresent(renderer);
     sleep(5);
     exit(1);
   }
