@@ -227,13 +227,13 @@ void manageEvent(SDL_Event event)
     case 3: //phase de "vote"
 	{
 		//petit tableau temp pour stocker les noms des autres joueurs sans le notre, probablement à sortir de cette fonc
-		char nomsAutresJoueurs[4][256]; // Je crois qu'il sert à rien ce truc mdr
+		char idAutresJoueurs[4]; // Je crois qu'il sert à rien ce truc mdr
 		int j = 0;
 		for (int i = 0; i < 5; i++)
 		{
 			if(i!=gId)
 			{
-				strcpy(nomsAutresJoueurs[j],gNames[i]);
+				idAutresJoueurs[j] = i;
 	    		j++; 
 	    	}
 	    }
@@ -244,8 +244,8 @@ void manageEvent(SDL_Event event)
             if((flagBoutonAppuye[0] == 0) && ((choix[0] == -1) || (choix[1] == -1)))
             {
                 flagBoutonAppuye[0] = 1; //on leve le flag du premier bouton
-                if (choix[0] == -1) { choix[0] = 0; numeroDuChoix[0] = 0;}
-                else if (choix[1] == -1) { choix[1] = 0; numeroDuChoix[0] = 1;}
+                if (choix[0] == -1) { choix[0] = idAutresJoueurs[0]; numeroDuChoix[0] = 0;}
+                else if (choix[1] == -1) { choix[1] =  idAutresJoueurs[0]; numeroDuChoix[0] = 1;}
             }
             else if (flagBoutonAppuye[0] == 1)
             {
@@ -260,8 +260,8 @@ void manageEvent(SDL_Event event)
             {
                 flagBoutonAppuye[1] = 1;
 
-                if (choix[0] == -1) { choix[0] = 1; numeroDuChoix[1] = 0; }
-                else if (choix[1] == -1) { choix[1] = 1; numeroDuChoix[1] = 1; }
+                if (choix[0] == -1) { choix[0] =  idAutresJoueurs[1]; numeroDuChoix[1] = 0; }
+                else if (choix[1] == -1) { choix[1] = idAutresJoueurs[1]; numeroDuChoix[1] = 1; }
             }
             else if (flagBoutonAppuye[1] == 1)
             {
@@ -277,8 +277,8 @@ void manageEvent(SDL_Event event)
             {
                 flagBoutonAppuye[2] = 1; 
 
-                if (choix[0] == -1) { choix[0] = 2; numeroDuChoix[2] = 0;}
-                else if (choix[1] == -1) { choix[1] = 2; numeroDuChoix[2] = 1;}
+                if (choix[0] == -1) { choix[0] = idAutresJoueurs[2]; numeroDuChoix[2] = 0;}
+                else if (choix[1] == -1) { choix[1] = idAutresJoueurs[2]; numeroDuChoix[2] = 1;}
             }
             else if (flagBoutonAppuye[2] == 1)
             {
@@ -293,8 +293,8 @@ void manageEvent(SDL_Event event)
             {
                 flagBoutonAppuye[3] = 1; 
 
-                if (choix[0] == -1) { choix[0] = 3; numeroDuChoix[3] = 0;}
-                else if (choix[1] == -1) { choix[1] = 3; numeroDuChoix[3] = 1;}
+                if (choix[0] == -1) { choix[0] = idAutresJoueurs[3]; numeroDuChoix[3] = 0;}
+                else if (choix[1] == -1) { choix[1] = idAutresJoueurs[3]; numeroDuChoix[3] = 1;}
             }
             else if (flagBoutonAppuye[3] == 1)
             {
@@ -603,17 +603,21 @@ void manageRedraw()
 
   case 4: //ecran de fin
   {
-        //on efface l'écran:
-        SDL_SetRenderDrawColor(renderer, 255, 230, 230, 230);
-        SDL_Rect rect = {0, 0, 1024, 768};
-        SDL_RenderFillRect(renderer, &rect);
-
+    //on efface l'écran:
+    SDL_SetRenderDrawColor(renderer, 255, 230, 230, 230);
+    SDL_Rect rect = {0, 0, 1024, 768};
+    SDL_RenderFillRect(renderer, &rect);
 
     char temp_buff[256];
-    sprintf(temp_buff, "Fin de la partie. Votre score est %d.\n Les espions étaient %s et %s et le mot secret était %s", score, gNames[idEspion[0]], gNames[idEspion[1]], secretWord);
+    sprintf(temp_buff, "Fin de la partie. Votre score est %d", score);
     myRenderText(temp_buff, 10, 250);
+    sprintf(temp_buff, "Les espions etaient %s et %s", gNames[idEspion[0]], gNames[idEspion[1]]);
+    myRenderText(temp_buff, 10, 300);
+    sprintf(temp_buff, "et le mot secret etait %s", secretWord);
+    myRenderText(temp_buff, 10, 350);
+
     SDL_RenderPresent(renderer);
-    sleep(5);
+    sleep(10); //pour laisser le temps de lire 
     exit(1);
   }
   break;
