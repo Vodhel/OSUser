@@ -14,8 +14,6 @@
 #define ECRAN_3_CONTRE_ESPION 3
 #define ECRAN_3_ESPION 4
 
-int testFlag = 1; // TEST
-int flagFin = 0; //TEST
 pthread_t thread_serveur_tcp_id;
 char gbuffer[256];
 char gServerIpAddress[256];
@@ -57,7 +55,7 @@ int flagChoixFait = 0;  //on envoit la reponse du joueur au serveur quand ce fla
 
 void *fn_serveur_tcp(void *arg)
 {
-        int sockfd, newsockfd, portno;
+        int sockfd, newsockfd, portno; 
         socklen_t clilen;
         struct sockaddr_in serv_addr, cli_addr;
         int n;
@@ -98,7 +96,6 @@ void *fn_serveur_tcp(void *arg)
                         printf("read error\n");
                         exit(1);
                 }
-                //printf("%s",gbuffer);
 
                 synchro=1;
 
@@ -244,11 +241,9 @@ void manageEvent(SDL_Event event)
 	    SDL_GetMouseState( &mx, &my );
         if ((15<mx)&&(mx<(15+240)) && (300<my)&&(my<(300+80))) // rectangle de 240x80 situé à (15, 300) {15, 300, 240, 80}
         {
-                printf("Clic bouton 0\n"); //TEST
             if((flagBoutonAppuye[0] == 0) && ((choix[0] == -1) || (choix[1] == -1)))
             {
                 flagBoutonAppuye[0] = 1; //on leve le flag du premier bouton
-                printf("Flag levé et l'état de choix est : %d %d\n", choix[0], choix[1]); //TEST
                 if (choix[0] == -1) { choix[0] = 0; numeroDuChoix[0] = 0;}
                 else if (choix[1] == -1) { choix[1] = 0; numeroDuChoix[0] = 1;}
             }
@@ -261,12 +256,10 @@ void manageEvent(SDL_Event event)
 
         if ((265<mx)&&(mx<(265+240)) && (300<my)&&(my<(300+80))) // rectangle de 240x80 situé à (265, 300) {265, 300, 240, 80};
         {
-            printf("Clic bouton 1\n"); //TEST
             if((flagBoutonAppuye[1] == 0) && ((choix[0] == -1) || (choix[1] == -1)))
             {
                 flagBoutonAppuye[1] = 1;
 
-                printf("Flag levé et l'état de choix est : %d %d\n", choix[0], choix[1]); //TEST
                 if (choix[0] == -1) { choix[0] = 1; numeroDuChoix[1] = 0; }
                 else if (choix[1] == -1) { choix[1] = 1; numeroDuChoix[1] = 1; }
             }
@@ -283,7 +276,6 @@ void manageEvent(SDL_Event event)
             if((flagBoutonAppuye[2] == 0) && ((choix[0] == -1) || (choix[1] == -1)))
             {
                 flagBoutonAppuye[2] = 1; 
-                printf("Flag levé et l'état de choix est : %d %d\n", choix[0], choix[1]); //TEST
 
                 if (choix[0] == -1) { choix[0] = 2; numeroDuChoix[2] = 0;}
                 else if (choix[1] == -1) { choix[1] = 2; numeroDuChoix[2] = 1;}
@@ -297,11 +289,9 @@ void manageEvent(SDL_Event event)
 
         if ((765<mx)&&(mx<(765+240)) && (300<my)&&(my<(300+80)))
         {
-                printf("Clic bouton 3\n"); //TEST
             if((flagBoutonAppuye[3] == 0) && ((choix[0] == -1) || (choix[1] == -1)))
             {
                 flagBoutonAppuye[3] = 1; 
-                printf("Flag levé et l'état de choix est : %d %d\n", choix[0], choix[1]); //TEST
 
                 if (choix[0] == -1) { choix[0] = 3; numeroDuChoix[3] = 0;}
                 else if (choix[1] == -1) { choix[1] = 3; numeroDuChoix[3] = 1;}
@@ -366,10 +356,6 @@ void manageNetwork()
         if (strcmp(gNames[4],"-")!=0)
         {
                 sscanf(gbuffer+(2*(gId+1)),"%d", &gRole);
-                //int temp_gRole[5] = {-1, -1, -1, -1, -1};
-                //printf("Le return du scan f : %d\n",sscanf(gbuffer,"R %d %d %d %d %d",&temp_gRole[0], &temp_gRole[1], &temp_gRole[2], &temp_gRole[3], &temp_gRole[4]));
-                //gRole = temp_gRole[gId];
-                //printf("Les temp roles : %d %d %d %d %d", temp_gRole[0], temp_gRole[1], temp_gRole[2], temp_gRole[3], temp_gRole[4]);
                 printf("ID : %d\nRole : %d\n",gId, gRole);
                 if (gRole == 0) screenNumber=2; // On change d'écrans ssi : non-espion | (espion & on a le mot)
         }
@@ -413,7 +399,6 @@ void manageNetwork()
                 // Message 'S' : Réception du score et des bonnes réponses.
                 case 'S' : 
                         sscanf(gbuffer+2, "%d %d %s %d", &idEspion[0], &idEspion[1], &secretWord, &score);
-                        printf("Données reçu : %d %d %s %d\n", idEspion[0], idEspion[1], secretWord, score); //TEST
                         screenNumber = 4;
         }
     break;
@@ -613,15 +598,6 @@ void manageRedraw()
     	}
     }
 
-        // // DEBUT TEST ZONE
-        // if(testFlag == 1)
-        // {
-        //         sprintf(sendBuffer, "A %d 0 1 boulet", gId);
-        //         sendMessageToServer(gServerIpAddress, gServerPort,sendBuffer);
-        //         printf("\nMessage envoyé : %s\n", sendBuffer);
-        //         testFlag = 0;
-        // }
-        // // FIN TEST ZONE
   } 
   break;
 
